@@ -245,9 +245,130 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .setup-notice code{background:rgba(249,195,58,0.1);padding:1px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:0.82rem;}
 
 @media(max-width:600px){
-  .wrap{padding:20px 16px 80px;}
-  .nav{padding:0 16px;}
-  .result-grid{grid-template-columns:1fr 1fr;}
+  /* ── NAV ── */
+  .nav{
+    padding:0 12px;height:54px;
+  }
+  .nav-logo-icon{width:28px;height:28px;font-size:0.65rem;}
+  .nav-title{font-size:0.72rem;}
+  .nav-sub,.nav-instructor{font-size:0.56rem;}
+  .nav-links{gap:3px;}
+  .nav-link{padding:5px 8px;font-size:0.68rem;gap:3px;}
+  .nav-link span,.nav-link br{display:none;}
+  .nav-divider{display:none;}
+  #nav-user-badge{display:none !important;}
+
+  /* ── WRAP ── */
+  .wrap{padding:16px 12px 100px;}
+
+  /* ── GATE SCREEN ── */
+  #gate-screen{padding:28px 4px 20px;}
+  .gate-icon{font-size:2.8rem;margin-bottom:14px;}
+  .gate-title{font-size:1.55rem;margin-bottom:8px;}
+  .gate-desc{font-size:0.84rem;margin-bottom:24px;line-height:1.65;}
+  .gate-cards{gap:8px;margin-bottom:24px;}
+  .gate-card{padding:12px 14px;min-width:72px;border-radius:10px;}
+  .gc-val{font-size:1.3rem;}
+  .gc-lbl{font-size:0.62rem;}
+  .gate-form{padding:18px 16px;border-radius:12px;}
+  .gate-form-title{font-size:0.88rem;}
+  .form-input{font-size:0.88rem;padding:11px 12px;}
+  .form-label{font-size:0.72rem;}
+  .btn-start{
+    width:100%;padding:14px;font-size:0.95rem;
+    border-radius:12px;
+  }
+
+  /* ── ALREADY TAKEN ── */
+  .taken-card{padding:28px 16px 24px;border-radius:16px;}
+  .taken-icon{font-size:2.8rem;}
+  .taken-title{font-size:1.1rem;}
+  .taken-msg{font-size:0.82rem;}
+  .taken-detail{font-size:0.78rem;padding:12px 14px;}
+  .btn-taken-home{width:100%;padding:13px;font-size:0.85rem;}
+
+  /* ── QUIZ SCREEN ── */
+  .quiz-topbar{
+    flex-direction:column;align-items:flex-start;
+    gap:8px;margin-bottom:14px;
+  }
+  .q-info{font-size:0.72rem;}
+  .q-info strong{font-size:0.92rem;}
+  .timer-box{padding:8px 14px;border-radius:8px;width:100%;justify-content:space-between;}
+  #timer{font-size:1rem;}
+  .prog-bar-outer{margin-bottom:16px;}
+
+  /* Question card */
+  .q-card{padding:18px 14px 16px;border-radius:12px;margin-bottom:14px;}
+  .q-type-chip{font-size:0.58rem;padding:2px 8px;}
+  .q-text{font-size:0.92rem;margin-bottom:14px;line-height:1.5;}
+  .q-code{font-size:0.74rem;padding:10px 12px;border-radius:6px;}
+
+  /* Choices — bigger tap targets on mobile */
+  .choices{gap:8px;}
+  .choice{
+    padding:14px 12px;font-size:0.86rem;border-radius:10px;
+    min-height:52px;gap:10px;
+  }
+  .choice-ltr{width:28px;height:28px;font-size:0.7rem;border-radius:6px;flex-shrink:0;}
+
+  /* Feedback */
+  .feedback{font-size:0.82rem;padding:11px 13px;}
+
+  /* Footer */
+  .quiz-footer{
+    flex-direction:column-reverse;align-items:stretch;gap:8px;margin-top:14px;
+  }
+  .q-flag{text-align:center;font-size:0.74rem;}
+  .btn-next{
+    width:100%;padding:14px;font-size:0.92rem;
+    border-radius:10px;text-align:center;display:none;
+  }
+  .btn-next.show{display:block;}
+
+  /* ── RESULT SCREEN ── */
+  .result-header{padding:28px 16px 24px;border-radius:16px;}
+  .result-ring-wrap{width:130px;height:130px;margin-bottom:16px;}
+  .ring-score{font-size:1.7rem;}
+  .result-title{font-size:1.35rem;}
+  .result-msg{font-size:0.82rem;}
+  .result-grid{
+    grid-template-columns:1fr 1fr 1fr;gap:8px;margin:16px 0;
+  }
+  .rg-box{padding:12px 8px;border-radius:10px;}
+  .rg-val{font-size:1.25rem;}
+  .rg-lbl{font-size:0.62rem;}
+
+  /* Screenshot notice */
+  .screenshot-notice{padding:14px;border-radius:12px;}
+  .sn-title{font-size:0.7rem;}
+  .sn-step{font-size:0.78rem;}
+  .btn-download-png{font-size:0.84rem;padding:12px;}
+
+  /* Submit status */
+  .submit-status{padding:14px 14px;border-radius:10px;}
+  .ss-title{font-size:0.86rem;}
+  .ss-msg{font-size:0.74rem;}
+
+  /* Result buttons */
+  .result-btns{flex-direction:column;gap:8px;}
+  .btn-review{width:100%;padding:13px;font-size:0.86rem;border-radius:10px;}
+
+  /* Review */
+  .rv-item{padding:14px;border-radius:10px;}
+  .rv-q{font-size:0.84rem;}
+  .rv-yours,.rv-exp{font-size:0.78rem;}
+
+  /* Feedback panel */
+  .fb-panel-header{padding:16px;}
+  .fb-panel-title{font-size:1rem;}
+  .fb-panel-sub{font-size:0.78rem;}
+  .fb-form{padding:16px;gap:16px;}
+  .fb-star{font-size:1.65rem;}
+  .fb-chip{font-size:0.78rem;padding:6px 12px;}
+  .fb-textarea{font-size:0.84rem;min-height:88px;}
+  .fb-submit{width:100%;justify-content:center;padding:13px;}
+  .fb-thanks{padding:22px 16px;}
 }
 </style>
 </head>
