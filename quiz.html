@@ -245,16 +245,27 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .setup-notice code{background:rgba(249,195,58,0.1);padding:1px 6px;border-radius:4px;font-family:'Fira Code',monospace;font-size:0.82rem;}
 
 @media(max-width:600px){
-  /* ── NAV ── */
+  /* ── NAV — 2-row mobile layout ── */
   .nav{
-    padding:0 12px;height:54px;
+    height:auto;padding:10px 12px 0;
+    flex-direction:column;align-items:stretch;gap:0;
   }
-  .nav-logo-icon{width:28px;height:28px;font-size:0.65rem;}
-  .nav-title{font-size:0.72rem;}
-  .nav-sub,.nav-instructor{font-size:0.56rem;}
-  .nav-links{gap:3px;}
-  .nav-link{padding:5px 8px;font-size:0.68rem;gap:3px;}
-  .nav-link span,.nav-link br{display:none;}
+  .nav-logo{gap:8px;padding-bottom:8px;}
+  .nav-logo-icon{width:28px;height:28px;font-size:0.65rem;flex-shrink:0;}
+  .nav-title{font-size:0.76rem;}
+  .nav-sub,.nav-instructor{font-size:0.58rem;}
+  .nav-links{
+    display:flex;flex-direction:row;gap:4px;
+    border-top:1px solid var(--border);
+    padding:8px 0 9px;overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-link{
+    padding:6px 10px;font-size:0.7rem;
+    white-space:nowrap;flex-shrink:0;
+  }
   .nav-divider{display:none;}
   #nav-user-badge{display:none !important;}
 
