@@ -838,12 +838,15 @@ function showResults(){
     section:   stuSection,
     score:     score + '/20',
     percent:   pct + '%',
+    wrong:     wrong,
     timestamp: new Date().toLocaleString('en-PH',{timeZone:'Asia/Manila'})
   });
   const keyNo   = 'quiz_done_no_'   + (stuNo||'').toLowerCase().replace(/\s/g,'');
   const keyName = 'quiz_done_name_' + stuName.toLowerCase().replace(/\s/g,'');
   if(stuNo)   localStorage.setItem(keyNo,   record);
   if(stuName) localStorage.setItem(keyName, record);
+  // Save student no for profile auto-fill
+  if(stuNo) localStorage.setItem('stu_no', stuNo);
 
   // Auto-show feedback panel after a short delay
   setTimeout(()=>{
