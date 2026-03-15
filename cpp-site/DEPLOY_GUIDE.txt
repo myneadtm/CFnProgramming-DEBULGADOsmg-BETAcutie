@@ -1,0 +1,199 @@
+╔══════════════════════════════════════════════════════════════════╗
+║   CompProg 101 — COMPLETE DEPLOYMENT GUIDE                      ║
+║   Instructor: DEBULGADO, S.M.G                                  ║
+║   Computer Fundamentals and Programming — BS Civil Engineering  ║
+╚══════════════════════════════════════════════════════════════════╝
+
+WHAT YOU ARE DEPLOYING
+──────────────────────
+Files to upload:
+  ✅ index.html       — Home page
+  ✅ lesson.html      — Week 1 Lesson module
+  ✅ quiz.html        — Theory Quiz (20 questions)
+  ✅ practical.html   — Practical Assessment (Run the Code)
+  ✅ teacher-d.png    — Your avatar image (MUST be in same folder)
+  ✅ Code.gs          — Google Apps Script (for the database)
+
+
+═══════════════════════════════════════════════
+ STEP 1 — SET UP GOOGLE SHEETS DATABASE
+═══════════════════════════════════════════════
+
+1. Go to https://sheets.google.com
+2. Click "+ New spreadsheet" (blank)
+3. Name it: CompProg 101 — Gradebook | DEBULGADO
+
+4. Inside the spreadsheet, click:
+   Extensions → Apps Script
+
+5. In the script editor:
+   • Delete ALL existing code (Ctrl+A, Delete)
+   • Open Code.gs from this ZIP
+   • Copy ALL of it (Ctrl+A, Ctrl+C)
+   • Paste into the Apps Script editor (Ctrl+V)
+   • Click Save (Ctrl+S or the floppy disk icon)
+
+6. Run the setup function:
+   • Click the dropdown next to "Run" button
+   • Select: setupSpreadsheet
+   • Click Run
+   • If prompted for permissions, click "Review permissions"
+     → Choose your Google account
+     → Click "Advanced" → "Go to ... (unsafe)"
+     → Click "Allow"
+   • You should see a popup: "✅ Gradebook ready!"
+   • Your spreadsheet now has 4 sheets:
+       📋 Practical Results
+       📝 Theory Quiz Results
+       👤 Student Summary
+       📊 Activity Log
+
+7. Deploy as a Web App:
+   • Click Deploy (top right) → New Deployment
+   • Click the gear icon ⚙ next to "Type"
+   • Select: Web app
+   • Fill in:
+       Description: CompProg 101 Grade Recorder
+       Execute as: Me (your Google account)
+       Who has access: Anyone
+   • Click Deploy
+   • Copy the Web App URL — it looks like:
+     https://script.google.com/macros/s/LONG_ID_HERE/exec
+
+   ⚠️ SAVE THIS URL — you need it in the next step!
+
+
+═══════════════════════════════════════════════
+ STEP 2 — PASTE THE URL INTO THE HTML FILES
+═══════════════════════════════════════════════
+
+1. Open quiz.html in a text editor (e.g. Notepad++, VS Code)
+2. Find this line (near the bottom, inside <script>):
+       const SHEET_URL='YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+3. Replace with your URL:
+       const SHEET_URL='https://script.google.com/macros/s/YOUR_ID/exec';
+4. Save quiz.html
+
+5. Open practical.html
+6. Find the SAME line and replace with the SAME URL
+7. Save practical.html
+
+✅ Both files now point to your database.
+
+
+═══════════════════════════════════════════════
+ STEP 3 — DEPLOY TO GITHUB PAGES
+═══════════════════════════════════════════════
+
+1. Go to https://github.com and sign in
+   (Create an account if you don't have one — it's free)
+
+2. Create a new repository:
+   • Click + (top right) → New repository
+   • Name: compprog101  (or any name you like)
+   • Set to: Public
+   • Click "Create repository"
+
+3. Upload your files:
+   • On the repository page, click "Add file" → "Upload files"
+   • Drag and drop ALL of these files at once:
+       index.html
+       lesson.html
+       quiz.html
+       practical.html
+       teacher-d.png
+   • Scroll down, click "Commit changes"
+
+4. Enable GitHub Pages:
+   • Click Settings (top menu of your repo)
+   • Scroll down to "Pages" (left sidebar)
+   • Under "Source": select "Deploy from a branch"
+   • Branch: main  |  Folder: / (root)
+   • Click Save
+
+5. Wait 1–2 minutes, then your site is live at:
+   https://YOURUSERNAME.github.io/compprog101/
+
+   Example: https://debulgado.github.io/compprog101/
+
+✅ Share this URL with your students!
+
+
+═══════════════════════════════════════════════
+ STEP 4 — TEST BEFORE SHARING
+═══════════════════════════════════════════════
+
+Open your live site and do this checklist:
+
+□ Home page loads with your avatar in the corner
+□ Week 1 "Lesson" button works → goes to lesson.html
+□ "Take Quiz ▼" dropdown shows two options
+□ Theory Quiz → enter a fake name → start → answer 1 question → check score is recorded in Google Sheets
+□ Practical Quiz → enter a fake name → start → timer counts down → type code in Task 1 → click Run → check output appears
+□ Submit Practical → check Google Sheets "Practical Results" tab has a new row
+
+If scores appear in Google Sheets = everything is working! ✅
+
+
+═══════════════════════════════════════════════
+ HOW STUDENTS ACCESS IT
+═══════════════════════════════════════════════
+
+Simply share the GitHub Pages URL:
+  https://YOURUSERNAME.github.io/compprog101/
+
+Students open it on any device — phone, tablet, or PC.
+No login required. No installation needed.
+Scores automatically go to your Google Sheet.
+
+
+═══════════════════════════════════════════════
+ VIEWING SCORES (TEACHER)
+═══════════════════════════════════════════════
+
+Open your Google Sheet anytime to see:
+
+📋 Practical Results
+  → Every submission with name, section, Task 1/2 results,
+    points (50/50), total score, time taken
+
+📝 Theory Quiz Results
+  → Every quiz attempt with score out of 20
+
+👤 Student Summary
+  → One row per student showing both assessment scores
+    and the combined average
+
+📊 Activity Log
+  → Quick log of all submissions with timestamps
+
+Color coding in all sheets:
+  🟢 Green background  = 100%
+  🟡 Yellow background = 50%
+  🔴 Red background    = 0%
+
+
+═══════════════════════════════════════════════
+ TROUBLESHOOTING
+═══════════════════════════════════════════════
+
+Q: Score not appearing in Google Sheets?
+A: Check that the SHEET_URL in both HTML files matches
+   your deployed Web App URL exactly. Re-deploy the
+   Apps Script if needed (Deploy → Manage deployments).
+
+Q: Teacher avatar not showing?
+A: Make sure teacher-d.png is uploaded to GitHub in the
+   SAME folder as the HTML files (not in a subfolder).
+
+Q: Students can't access the site?
+A: Make sure GitHub Pages is enabled and the repo is Public.
+
+Q: "Authorization required" error in Apps Script?
+A: Re-run setupSpreadsheet and approve permissions again,
+   then re-deploy as a Web App.
+
+══════════════════════════════════════════════════════════════════
+Good luck, Instructor DEBULGADO! 🎓
+Your students are in good hands.
+══════════════════════════════════════════════════════════════════
