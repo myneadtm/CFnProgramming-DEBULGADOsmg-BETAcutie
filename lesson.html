@@ -1,0 +1,2314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Computer Fundamentals and Programming — Week 1 Lesson</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090f;
+  --s1:#0e1218;
+  --s2:#141a24;
+  --s3:#1c2433;
+  --border:#232d3f;
+  --accent:#f9c33a;
+  --accent2:#3af9c3;
+  --accent3:#f93a7a;
+  --blue:#4d9fff;
+  --text:#dde6f0;
+  --muted:#6b7f99;
+  --code:#e2f0ff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── NOISE OVERLAY ── */
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");pointer-events:none;z-index:0;}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:200;background:rgba(7,9,15,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 32px;display:flex;align-items:center;justify-content:space-between;height:66px;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'Fira Code',monospace;font-size:0.75rem;font-weight:600;color:#000;flex-shrink:0;}
+.nav-title{font-weight:700;font-size:0.82rem;color:var(--text);line-height:1.3;}
+.nav-sub{font-size:0.62rem;color:var(--muted);line-height:1.3;}
+.nav-instructor{font-size:0.62rem;color:var(--accent);font-weight:600;line-height:1.3;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-link{padding:6px 14px;border-radius:7px;font-size:0.78rem;font-weight:600;color:var(--muted);text-decoration:none;transition:all 0.2s;border:1px solid transparent;cursor:pointer;display:inline-flex;align-items:center;gap:5px;}
+.nav-link:hover{background:var(--s2);color:var(--text);border-color:var(--border);}
+.nav-link.active{background:var(--s2);color:var(--text);border-color:var(--border);}
+.nav-link.home-link{border-color:var(--border);}
+.nav-link.practical-link{border-color:rgba(0,255,247,0.3);color:#00fff7;}
+.nav-link.practical-link:hover{border-color:#00fff7;background:rgba(0,255,247,0.06);}
+.nav-link.quiz-link{background:var(--accent);color:#000;font-weight:700;border-color:var(--accent);}
+.nav-link.quiz-link:hover{background:#ffda6e;}
+.nav-divider{width:1px;height:18px;background:var(--border);margin:0 4px;}
+
+/* ── HERO ── */
+.hero{position:relative;padding:80px 32px 60px;overflow:hidden;border-bottom:1px solid var(--border);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:0.3;}
+.hero-glow{position:absolute;top:-100px;left:50%;transform:translateX(-50%);width:600px;height:300px;background:radial-gradient(ellipse,rgba(249,195,58,0.08) 0%,transparent 70%);pointer-events:none;}
+.hero-inner{position:relative;max-width:900px;margin:0 auto;}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(249,195,58,0.1);border:1px solid rgba(249,195,58,0.3);color:var(--accent);font-size:0.7rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:20px;margin-bottom:20px;}
+.hero-badge span{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+.hero-title{font-size:clamp(2rem,5vw,3.2rem);font-weight:800;line-height:1.1;margin-bottom:16px;letter-spacing:-1px;}
+.hero-title em{font-style:normal;color:var(--accent);}
+.hero-desc{font-size:1rem;color:var(--muted);font-weight:300;line-height:1.8;max-width:580px;margin-bottom:32px;}
+.hero-stats{display:flex;gap:12px;flex-wrap:wrap;}
+.hstat{background:var(--s1);border:1px solid var(--border);border-radius:10px;padding:14px 20px;display:flex;align-items:center;gap:10px;}
+.hstat-icon{font-size:1.3rem;}
+.hstat-val{font-weight:700;font-size:0.95rem;line-height:1.2;}
+.hstat-lbl{font-size:0.7rem;color:var(--muted);}
+
+/* ── QUICK LINKS BAR ── */
+.quick-links-bar{
+  background:rgba(14,18,36,0.95);
+  border-bottom:1px solid var(--border);
+  padding:10px 32px;
+  display:flex;align-items:center;gap:8px;
+  flex-wrap:nowrap;overflow-x:auto;
+  scrollbar-width:none;
+  -webkit-overflow-scrolling:touch;
+  position:sticky;top:66px;z-index:90;
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+}
+.quick-links-bar::-webkit-scrollbar{display:none;}
+.ql-label{
+  font-size:0.65rem;font-weight:700;
+  color:var(--muted);letter-spacing:2px;
+  text-transform:uppercase;white-space:nowrap;
+  margin-right:4px;flex-shrink:0;
+}
+.ql-btn{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 14px;border-radius:20px;
+  font-size:0.74rem;font-weight:600;
+  cursor:pointer;transition:all 0.18s;
+  white-space:nowrap;flex-shrink:0;
+  border:1px solid var(--border);
+  background:var(--s1);color:var(--muted);
+  font-family:'Outfit',sans-serif;
+  text-decoration:none;
+  user-select:none;
+  -webkit-tap-highlight-color:transparent;
+}
+.ql-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(249,195,58,0.06);}
+.ql-btn:active{transform:scale(0.95);}
+.ql-btn.ql-active{
+  border-color:var(--accent);
+  color:var(--accent);
+  background:rgba(249,195,58,0.08);
+}
+.ql-btn.ql-live{
+  border-color:rgba(58,249,195,0.4);
+  color:var(--accent2);
+  background:rgba(58,249,195,0.07);
+}
+.ql-btn.ql-live:hover,.ql-btn.ql-live.ql-active{
+  border-color:var(--accent2);
+  background:rgba(58,249,195,0.14);
+  box-shadow:0 0 14px rgba(58,249,195,0.15);
+  color:var(--accent2);
+}
+.ql-btn.ql-quiz{
+  border-color:rgba(249,195,58,0.4);
+  color:var(--accent);
+  background:rgba(249,195,58,0.07);
+}
+.ql-btn.ql-quiz:hover{
+  background:var(--accent);
+  color:#000;
+  border-color:var(--accent);
+}
+.ql-btn.ql-practical{
+  border-color:rgba(123,47,255,0.4);
+  color:#b44fff;
+  background:rgba(123,47,255,0.07);
+}
+.ql-btn.ql-practical:hover{
+  background:#b44fff;
+  color:#fff;
+  border-color:#b44fff;
+  box-shadow:0 0 14px rgba(123,47,255,0.35);
+}
+.ql-divider{width:1px;height:16px;background:var(--border);flex-shrink:0;margin:0 4px;}
+.reg-bar{background:var(--s2);border-bottom:1px solid var(--border);padding:16px 32px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+.reg-label{font-size:0.85rem;font-weight:600;color:var(--accent);white-space:nowrap;}
+.reg-input{background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:0.88rem;width:200px;outline:none;transition:border-color 0.2s;}
+.reg-input:focus{border-color:var(--accent);}
+.reg-btn{background:var(--accent);color:#000;border:none;border-radius:8px;padding:9px 20px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.reg-btn:hover{background:#ffda6e;}
+.reg-status{font-size:0.8rem;color:var(--accent2);display:none;}
+.reg-status.show{display:block;}
+
+/* ── PROGRESS TRACKER ── */
+.progress-track{background:var(--s1);border-bottom:1px solid var(--border);padding:12px 32px;display:flex;align-items:center;gap:16px;}
+.pt-label{font-size:0.75rem;color:var(--muted);font-weight:500;white-space:nowrap;}
+.pt-bar{flex:1;background:var(--s3);border-radius:4px;height:6px;overflow:hidden;}
+.pt-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:4px;transition:width 0.6s ease;width:0%;}
+.pt-pct{font-size:0.75rem;color:var(--accent);font-family:'Fira Code',monospace;font-weight:600;min-width:36px;}
+.pt-time{font-size:0.75rem;color:var(--muted);font-family:'Fira Code',monospace;white-space:nowrap;}
+
+/* ── MAIN LAYOUT ── */
+.main-wrap{display:flex;min-height:calc(100vh - 180px);}
+.sidebar{width:260px;flex-shrink:0;background:var(--s1);border-right:1px solid var(--border);position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;padding:20px 0;}
+.sb-section{margin-bottom:4px;}
+.sb-section-title{font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:8px 20px 4px;}
+.sb-item{display:flex;align-items:center;gap:10px;padding:8px 20px;font-size:0.82rem;color:var(--muted);cursor:pointer;transition:all 0.18s;border-left:2px solid transparent;}
+.sb-item:hover{background:var(--s2);color:var(--text);}
+.sb-item.active{background:rgba(249,195,58,0.08);color:var(--accent);border-left-color:var(--accent);}
+.sb-item.done{color:var(--accent2);}
+.sb-item.done .sb-dot{background:var(--accent2);}
+.sb-dot{width:8px;height:8px;border-radius:50%;background:var(--border);flex-shrink:0;transition:all 0.2s;}
+.sb-item.active .sb-dot{background:var(--accent);}
+.sb-dur{margin-left:auto;font-size:0.68rem;font-family:'Fira Code',monospace;opacity:0.6;}
+
+/* ── CONTENT AREA ── */
+.content{flex:1;max-width:860px;padding:40px 40px 100px;}
+
+/* ── SECTION BLOCKS ── */
+.lesson-section{margin-bottom:60px;opacity:0;transform:translateY(20px);transition:opacity 0.5s,transform 0.5s;}
+.lesson-section.visible{opacity:1;transform:translateY(0);}
+
+.sec-header{display:flex;align-items:flex-start;gap:16px;margin-bottom:24px;}
+.sec-number{width:44px;height:44px;background:var(--accent);border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:'Fira Code',monospace;font-size:0.8rem;font-weight:600;color:#000;flex-shrink:0;}
+.sec-meta{flex:1;}
+.sec-tag{font-size:0.65rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+.sec-title{font-size:1.4rem;font-weight:700;line-height:1.2;letter-spacing:-0.3px;}
+.sec-duration{display:inline-flex;align-items:center;gap:5px;background:var(--s2);border:1px solid var(--border);border-radius:6px;padding:3px 10px;font-size:0.7rem;color:var(--muted);font-family:'Fira Code',monospace;margin-top:6px;}
+
+.body-text{font-size:0.93rem;line-height:1.85;color:#99b0c8;font-weight:300;}
+.body-text strong{color:var(--text);font-weight:600;}
+.body-text + .body-text{margin-top:14px;}
+
+/* ── CONCEPT CARDS ── */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:20px 0;}
+.concept-card{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:18px;transition:border-color 0.2s,transform 0.2s,box-shadow 0.2s;cursor:pointer;}
+.concept-card:hover{border-color:var(--accent);transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,0,0,0.3);}
+.concept-card:active{transform:scale(0.98);}
+.cc-icon{font-size:1.4rem;margin-bottom:8px;}
+.cc-title{font-size:0.88rem;font-weight:700;margin-bottom:4px;}
+.cc-desc{font-size:0.78rem;color:var(--muted);line-height:1.5;}
+.cc-tap-hint{font-size:0.62rem;color:var(--accent);font-weight:600;margin-top:10px;display:flex;align-items:center;gap:4px;opacity:0.7;}
+
+.acb-view-tabs{display:flex;gap:6px;margin-bottom:14px;}
+.acb-tab{padding:5px 14px;border-radius:20px;font-size:0.72rem;font-weight:700;cursor:pointer;border:1px solid rgba(96,165,250,0.3);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;transition:all 0.2s;}
+.acb-tab.active{background:rgba(96,165,250,0.15);border-color:var(--blue);color:var(--blue);}
+.acb-tab:hover{border-color:var(--blue);color:var(--blue);}
+/* ── AUTOCAD BIG BANNER ── */
+.autocad-banner{
+  position:relative;overflow:hidden;
+  background:linear-gradient(135deg,#0a0f1e 0%,#0d1830 40%,#071228 100%);
+  border:1.5px solid rgba(96,165,250,0.35);
+  border-radius:18px;margin-top:20px;
+  cursor:pointer;
+  transition:border-color 0.25s,transform 0.25s,box-shadow 0.25s;
+  box-shadow:0 0 40px rgba(59,130,246,0.08);
+}
+.autocad-banner:hover{
+  border-color:rgba(96,165,250,0.7);
+  transform:translateY(-3px);
+  box-shadow:0 12px 48px rgba(59,130,246,0.18);
+}
+.autocad-banner:active{transform:scale(0.99);}
+.acb-glow{
+  position:absolute;top:-80px;left:30%;
+  width:400px;height:300px;
+  background:radial-gradient(ellipse,rgba(59,130,246,0.14),transparent 65%);
+  pointer-events:none;
+}
+.acb-inner{
+  display:grid;grid-template-columns:1fr 300px;
+  gap:0;align-items:stretch;
+}
+@media(max-width:768px){.acb-inner{grid-template-columns:1fr 220px;}}
+@media(max-width:600px){.acb-inner{grid-template-columns:1fr;}}
+.acb-left{padding:26px 24px 24px;position:relative;z-index:1;}
+.acb-eyebrow{
+  display:inline-flex;align-items:center;gap:7px;
+  background:rgba(249,195,58,0.1);
+  border:1px solid rgba(249,195,58,0.3);
+  color:var(--accent);
+  font-size:0.65rem;font-weight:700;
+  letter-spacing:2px;text-transform:uppercase;
+  padding:4px 12px;border-radius:20px;
+  margin-bottom:14px;
+}
+.acb-dot{
+  width:5px;height:5px;border-radius:50%;
+  background:var(--accent);
+  animation:blink 2s infinite;
+}
+.acb-title{
+  font-family:'Outfit',sans-serif;
+  font-size:clamp(1.05rem,2.5vw,1.4rem);
+  font-weight:800;line-height:1.25;
+  margin-bottom:12px;color:#e2eeff;
+  letter-spacing:-0.3px;
+}
+.acb-hl{
+  background:linear-gradient(90deg,#60a5fa,#22d3ee);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.acb-desc{
+  font-size:0.84rem;color:#6a8aaa;
+  line-height:1.75;margin-bottom:16px;
+  font-weight:300;max-width:420px;
+}
+.acb-desc strong{color:#99b0c8;font-weight:600;}
+.acb-cta{}
+.acb-cta-btn{
+  display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,#1d4ed8,#0ea5e9);
+  color:#fff;font-size:0.8rem;font-weight:700;
+  padding:9px 20px;border-radius:10px;
+  box-shadow:0 4px 16px rgba(29,78,216,0.35);
+  transition:box-shadow 0.2s;font-family:'Outfit',sans-serif;
+}
+.autocad-banner:hover .acb-cta-btn{
+  box-shadow:0 6px 24px rgba(29,78,216,0.5);
+}
+.acb-right{
+  border-left:1px solid rgba(96,165,250,0.15);
+  display:flex;flex-direction:column;
+  background:rgba(6,13,31,0.6);
+}
+@media(max-width:600px){
+  .acb-right{border-left:none;border-top:1px solid rgba(96,165,250,0.15);}
+}
+.acb-screen{
+  flex:1;display:flex;flex-direction:column;
+  border-radius:0 18px 18px 0;overflow:hidden;
+}
+@media(max-width:600px){.acb-screen{border-radius:0 0 16px 16px;}}
+.acb-screen-bar{
+  background:#0a1525;padding:7px 12px;
+  display:flex;align-items:center;
+  border-bottom:1px solid rgba(96,165,250,0.1);
+  flex-shrink:0;
+}
+
+/* ── MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(0,0,0,0.78);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;animation:fadeOverlay 0.2s ease;}
+.modal-overlay.open{display:flex;}
+@keyframes fadeOverlay{from{opacity:0;}to{opacity:1;}}
+.modal-box{background:var(--s1);border:1px solid var(--border2);border-radius:20px;width:100%;max-width:640px;max-height:88vh;overflow-y:auto;position:relative;animation:slideUpModal 0.25s cubic-bezier(.4,0,.2,1);scrollbar-width:thin;scrollbar-color:var(--border) transparent;}
+@keyframes slideUpModal{from{opacity:0;transform:translateY(24px);}to{opacity:1;transform:translateY(0);}}
+.modal-hdr{padding:20px 22px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;position:sticky;top:0;background:var(--s1);border-bottom:1px solid var(--border);z-index:2;}
+.modal-hdr-left{display:flex;align-items:center;gap:12px;}
+.modal-micon{font-size:1.8rem;width:46px;height:46px;background:var(--s2);border:1px solid var(--border);border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.modal-mtitle{font-size:1.05rem;font-weight:800;line-height:1.2;}
+.modal-msub{font-size:0.76rem;color:var(--muted);margin-top:2px;}
+.modal-close{width:32px;height:32px;border-radius:8px;background:var(--s2);border:1px solid var(--border);color:var(--muted);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.18s;}
+.modal-close:hover{background:var(--s3);color:var(--text);}
+.modal-body{padding:20px 22px 28px;}
+.modal-desc{font-size:0.88rem;color:#99b0c8;line-height:1.8;margin-bottom:20px;font-weight:300;}
+.modal-desc strong{color:var(--text);}
+.modal-slabel{font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;display:block;}
+
+/* AutoCAD mockup */
+.autocad-wrap{background:#071018;border:1px solid var(--border);border-radius:10px;overflow:hidden;margin-bottom:18px;}
+.autocad-titlebar{background:#0f1e30;padding:7px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border);}
+.autocad-dots{display:flex;gap:5px;}
+.autocad-dot{width:10px;height:10px;border-radius:50%;}
+.autocad-name{font-family:'Fira Code',monospace;font-size:0.68rem;color:var(--muted);margin-left:4px;}
+.autocad-main{display:grid;grid-template-columns:1fr 180px;min-height:150px;}
+.autocad-canvas{background:#0a1828;display:flex;align-items:center;justify-content:center;padding:12px;position:relative;}
+.autocad-canvas svg{width:160px;height:110px;}
+.autocad-sidebar{background:#071018;border-left:1px solid var(--border);padding:10px;font-family:'Fira Code',monospace;font-size:0.62rem;}
+.acs-row{margin-bottom:6px;}
+.acs-lbl{color:#3a5070;display:block;margin-bottom:1px;}
+.acs-val{color:#60a5fa;}
+.acs-val.green{color:#22d3a4;}
+.acs-val.yellow{color:var(--accent);}
+.autocad-cmd{background:#040e1a;border-top:1px solid var(--border);padding:7px 12px;font-family:'Fira Code',monospace;font-size:0.68rem;color:#22d3a4;}
+.autocad-cmd span{color:#3a5070;}
+
+/* ── TABLE ── */
+.data-table{width:100%;border-collapse:collapse;margin:16px 0;font-size:0.85rem;}
+.data-table th{background:var(--s3);border:1px solid var(--border);padding:10px 14px;text-align:left;font-family:'Outfit',sans-serif;font-size:0.75rem;color:var(--accent);letter-spacing:0.5px;font-weight:600;}
+.data-table td{border:1px solid var(--border);padding:10px 14px;color:#99b0c8;vertical-align:top;}
+.data-table tr:hover td{background:var(--s2);}
+.mono{font-family:'Fira Code',monospace;color:var(--blue);font-size:0.82rem;}
+
+/* ── CALLOUTS ── */
+.callout{border-radius:10px;padding:14px 18px;margin:16px 0;font-size:0.88rem;line-height:1.75;display:flex;gap:12px;}
+.callout.info{background:rgba(77,159,255,0.07);border:1px solid rgba(77,159,255,0.2);}
+.callout.tip{background:rgba(58,249,195,0.06);border:1px solid rgba(58,249,195,0.2);}
+.callout.warn{background:rgba(249,195,58,0.07);border:1px solid rgba(249,195,58,0.2);}
+.callout.danger{background:rgba(249,58,122,0.07);border:1px solid rgba(249,58,122,0.2);}
+.callout-icon{font-size:1.1rem;flex-shrink:0;margin-top:2px;}
+.callout-body{color:#99b0c8;}.callout-body strong{color:var(--text);}
+
+/* ── CODE BLOCK ── */
+.code-wrap{background:#070b12;border:1px solid var(--border);border-radius:12px;margin:16px 0;overflow:hidden;}
+.code-top{background:var(--s2);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;}
+.code-dots{display:flex;gap:5px;}
+.cdot{width:11px;height:11px;border-radius:50%;}
+.cdot.r{background:#f85149;}.cdot.y{background:#f0a84b;}.cdot.g{background:#23d18b;}
+.code-filename{font-family:'Fira Code',monospace;font-size:0.72rem;color:var(--muted);margin-left:6px;}
+.copy-btn{margin-left:auto;background:var(--s3);border:1px solid var(--border);border-radius:6px;padding:4px 10px;font-size:0.7rem;color:var(--muted);cursor:pointer;font-family:'Outfit',sans-serif;transition:all 0.2s;}
+.copy-btn:hover{color:var(--text);border-color:var(--accent);}
+.code-wrap pre{font-family:'Fira Code',monospace;font-size:0.83rem;line-height:1.75;padding:18px 20px;overflow-x:auto;color:var(--code);}
+.kw{color:#ff7b72;}.fn{color:#d2a8ff;}.str{color:#a5d6ff;}.num{color:var(--accent);}.cm{color:#4b5e78;font-style:italic;}.op{color:var(--accent2);}
+
+/* ── STEP-BY-STEP ── */
+.steps{display:flex;flex-direction:column;gap:0;margin:20px 0;}
+.step{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--border);}
+.step:last-child{border-bottom:none;}
+.step-num{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:0.82rem;color:#000;flex-shrink:0;margin-top:2px;}
+.step-body{flex:1;}
+.step-title{font-weight:700;font-size:0.92rem;margin-bottom:4px;}
+.step-desc{font-size:0.84rem;color:var(--muted);line-height:1.6;}
+
+/* ── ANIMATED CODE DEMO ── */
+.demo-panel{background:#070b12;border:1px solid var(--accent);border-radius:14px;overflow:hidden;margin:24px 0;box-shadow:0 0 40px rgba(249,195,58,0.06);}
+.demo-header{background:var(--s2);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+.demo-title{font-size:0.8rem;font-weight:600;color:var(--accent);}
+.demo-badge{background:rgba(249,195,58,0.15);border:1px solid rgba(249,195,58,0.3);border-radius:20px;padding:2px 10px;font-size:0.65rem;color:var(--accent);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.demo-body{display:grid;grid-template-columns:1fr 1fr;min-height:260px;}
+/* demo-body stacks on mobile — handled in @media(max-width:768px) */
+.demo-code{border-right:1px solid var(--border);padding:20px;}
+.demo-code pre{font-family:'Fira Code',monospace;font-size:0.8rem;line-height:1.8;color:var(--code);white-space:pre-wrap;}
+.demo-line{display:block;padding:2px 0;border-radius:4px;transition:background 0.2s;}
+.demo-line.highlight{background:rgba(249,195,58,0.1);padding:2px 6px;margin:0 -6px;}
+.demo-explain{padding:20px;display:flex;flex-direction:column;justify-content:center;}
+.demo-explain-title{font-size:0.7rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent);margin-bottom:10px;}
+.demo-explain-text{font-size:0.85rem;color:var(--muted);line-height:1.7;min-height:60px;}
+.demo-controls{border-top:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:10px;}
+.demo-btn{background:var(--s3);border:1px solid var(--border);border-radius:7px;padding:7px 16px;font-size:0.8rem;color:var(--text);cursor:pointer;font-family:'Outfit',sans-serif;font-weight:500;transition:all 0.2s;}
+.demo-btn:hover{border-color:var(--accent);color:var(--accent);}
+.demo-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);font-weight:700;}
+.demo-btn.primary:hover{background:#ffda6e;}
+.demo-progress-dots{display:flex;gap:6px;margin-left:auto;}
+.demo-dot{width:8px;height:8px;border-radius:50%;background:var(--border);transition:background 0.3s;}
+.demo-dot.active{background:var(--accent);}
+
+/* ── LIVE CODE PANEL ── */
+.live-panel{border:1px solid var(--accent2);border-radius:14px;overflow:hidden;margin:24px 0;}
+.live-header{background:var(--s2);border-bottom:1px solid var(--border);padding:12px 18px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.live-title{font-size:0.82rem;font-weight:700;color:var(--accent2);}
+.live-badge{background:rgba(58,249,195,0.1);border:1px solid rgba(58,249,195,0.3);border-radius:20px;padding:2px 10px;font-size:0.65rem;color:var(--accent2);font-weight:600;letter-spacing:1px;text-transform:uppercase;}
+.live-tabs{display:flex;gap:4px;margin-left:auto;}
+.live-tab{padding:5px 12px;border-radius:6px;font-size:0.75rem;font-weight:500;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--muted);transition:all 0.2s;}
+.live-tab.active{background:var(--accent2);color:#000;border-color:var(--accent2);font-weight:700;}
+.live-editor-area{display:grid;grid-template-columns:1fr 1fr;min-height:260px;}
+/* live-editor-area stacks on mobile — handled in @media(max-width:768px) */
+.live-editor{border-right:1px solid var(--border);}
+.live-textarea{width:100%;height:100%;min-height:240px;background:#040608;border:none;color:#e2f0ff;font-family:'Fira Code',monospace;font-size:0.82rem;line-height:1.7;padding:16px;resize:none;outline:none;tab-size:4;}
+.live-output-pane{display:flex;flex-direction:column;}
+.live-output-header{padding:8px 14px;font-size:0.7rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--border);}
+.live-output{flex:1;padding:16px;font-family:'Fira Code',monospace;font-size:0.82rem;line-height:1.7;color:var(--accent2);min-height:180px;white-space:pre-wrap;}
+.live-output.idle{color:var(--muted);font-style:italic;}
+.live-output.error{color:var(--accent3);}
+.live-footer{border-top:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.run-btn{background:var(--accent2);color:#000;border:none;border-radius:8px;padding:9px 24px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.85rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;gap:7px;}
+.run-btn:hover{background:#6affd8;}
+.run-btn:disabled{opacity:0.4;cursor:not-allowed;}
+.reset-btn{background:transparent;border:1px solid var(--border);border-radius:8px;padding:9px 18px;font-family:'Outfit',sans-serif;font-size:0.82rem;color:var(--muted);cursor:pointer;transition:all 0.2s;}
+.reset-btn:hover{border-color:var(--accent3);color:var(--accent3);}
+.run-status{font-size:0.75rem;color:var(--muted);font-family:'Fira Code',monospace;}
+
+/* ── TRY-IT EXERCISES ── */
+.tryit{background:var(--s2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:20px 0;}
+.tryit-header{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+.tryit-icon{font-size:1.2rem;}
+.tryit-title{font-weight:700;font-size:0.92rem;}
+.tryit-badge{background:rgba(249,58,122,0.1);border:1px solid rgba(249,58,122,0.2);color:var(--accent3);font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:2px 9px;border-radius:20px;margin-left:auto;}
+.tryit-task{font-size:0.87rem;color:var(--muted);line-height:1.7;margin-bottom:12px;}
+.tryit-task strong{color:var(--text);}
+.expected-output{background:#040608;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-family:'Fira Code',monospace;font-size:0.8rem;color:var(--accent2);margin-top:10px;}
+.expected-label{font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:4px;}
+
+/* ── KNOWLEDGE CHECK ── */
+.kcheck{background:rgba(77,159,255,0.05);border:1px solid rgba(77,159,255,0.2);border-radius:12px;padding:20px;margin:24px 0;}
+.kcheck-title{font-size:0.75rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px;}
+.kcheck-q{font-size:0.9rem;font-weight:600;margin-bottom:12px;}
+.kcheck-opts{display:flex;flex-direction:column;gap:7px;}
+.kcheck-opt{background:var(--s2);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:0.85rem;cursor:pointer;transition:all 0.18s;display:flex;align-items:center;gap:10px;}
+.kcheck-opt:hover{border-color:var(--blue);}
+.kcheck-opt.correct{border-color:var(--accent2);background:rgba(58,249,195,0.08);color:var(--accent2);}
+.kcheck-opt.wrong{border-color:var(--accent3);background:rgba(249,58,122,0.08);color:var(--accent3);}
+.kcheck-letter{width:24px;height:24px;border-radius:6px;background:var(--border);display:flex;align-items:center;justify-content:center;font-size:0.68rem;font-weight:700;font-family:'Fira Code',monospace;flex-shrink:0;}
+.kcheck-fb{display:none;margin-top:12px;padding:10px 14px;border-radius:8px;font-size:0.84rem;line-height:1.6;}
+.kcheck-fb.show{display:block;}
+.kcheck-fb.ok{background:rgba(58,249,195,0.07);border:1px solid rgba(58,249,195,0.2);color:#7ee8c8;}
+.kcheck-fb.ng{background:rgba(249,58,122,0.07);border:1px solid rgba(249,58,122,0.2);color:#ffa8c0;}
+
+/* ── SECTION COMPLETE ── */
+.sec-complete{display:none;background:rgba(58,249,195,0.05);border:1px solid rgba(58,249,195,0.2);border-radius:10px;padding:14px 18px;margin-top:20px;align-items:center;gap:12px;font-size:0.87rem;}
+.sec-complete.show{display:flex;}
+.sec-complete-check{font-size:1.4rem;}
+.sec-complete-text{color:var(--accent2);}
+.sec-complete-text strong{display:block;font-size:0.95rem;}
+.mark-done-btn{margin-left:auto;background:var(--accent2);color:#000;border:none;border-radius:7px;padding:7px 16px;font-family:'Outfit',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;}
+
+/* ── FOOTER NAV ── */
+.lesson-footer{display:flex;justify-content:space-between;align-items:center;padding:32px 0 0;border-top:1px solid var(--border);margin-top:20px;flex-wrap:wrap;gap:12px;}
+.foot-btn{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:12px 20px;font-size:0.88rem;font-weight:600;color:var(--text);cursor:pointer;transition:all 0.2s;text-decoration:none;}
+.foot-btn:hover{border-color:var(--accent);color:var(--accent);}
+.foot-btn.primary{background:var(--accent);color:#000;border-color:var(--accent);}
+.foot-btn.primary:hover{background:#ffda6e;}
+
+/* ═══════════════════════════════════════
+   MOBILE RESPONSIVE — lesson.html
+   ═══════════════════════════════════════ */
+
+/* Tablet */
+@media(max-width:1024px){
+  .sidebar{width:210px;}
+  .content{padding:28px 24px 80px;}
+  .quick-links-bar{padding:9px 20px;}
+}
+/* ════════════════════════════════════════
+   PORTRAIT-FIRST MOBILE — lesson.html
+   ════════════════════════════════════════ */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .main-wrap{display:block;}
+  .content{padding:18px 14px 80px;max-width:100%;}
+  /* Quick links becomes very important on mobile — sidebar is hidden */
+  .quick-links-bar{padding:8px 14px;gap:6px;top:auto;position:relative;border-top:1px solid var(--border);}
+  .ql-label{display:none;}
+  .ql-btn{font-size:0.7rem;padding:5px 10px;}
+  .ql-divider{display:none;}
+  .nav{height:auto;min-height:56px;flex-wrap:wrap;padding:0;}
+  .nav-logo{padding:10px 14px;flex:1;width:100%;border-bottom:1px solid var(--border);}
+  .nav-logo-icon{width:30px;height:30px;font-size:0.64rem;}
+  .nav-title{font-size:0.76rem;}
+  .nav-sub,.nav-instructor{font-size:0.56rem;}
+  .nav-links{width:100%;padding:7px 14px;gap:5px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-link{white-space:nowrap;font-size:0.7rem;padding:5px 10px;}
+  .nav-divider{display:none;}
+  .hero{padding:28px 14px 24px;}
+  .hero-title{font-size:1.5rem;}
+  .hero-desc{font-size:0.84rem;}
+  .hero-meta{gap:6px;}
+  .meta-pill{font-size:0.68rem;padding:5px 9px;}
+  .reg-bar{padding:10px 14px;flex-wrap:wrap;gap:8px;}
+  .reg-input{width:100%;max-width:none;}
+  .progress-track{padding:9px 14px;}
+  .sec-header{gap:10px;}
+  .sec-number{width:36px;height:36px;font-size:0.72rem;border-radius:8px;}
+  .sec-title{font-size:1.05rem;}
+  .body-text{font-size:0.88rem;}
+  .concept-grid{grid-template-columns:1fr 1fr;}
+  .day-grid{grid-template-columns:1fr;}
+  .code-wrap pre{font-size:0.75rem;padding:13px;}
+  .code-top{padding:7px 12px;}
+  .demo-body{grid-template-columns:1fr;}
+  .demo-code{border-right:none;border-bottom:1px solid var(--border);}
+  .demo-explain-text{font-size:0.82rem;}
+  .demo-controls{flex-wrap:wrap;gap:6px;}
+  .demo-btn{padding:6px 12px;font-size:0.75rem;}
+  .live-editor-area{grid-template-columns:1fr;}
+  .live-editor{border-right:none;border-bottom:1px solid var(--border);}
+  .live-textarea{min-height:160px;font-size:0.78rem;}
+  .live-output{min-height:100px;}
+  .live-tab{font-size:0.72rem;padding:4px 10px;}
+  .run-btn{font-size:0.8rem;padding:8px 16px;}
+  .reset-btn{font-size:0.78rem;padding:8px 12px;}
+  .data-table{font-size:0.76rem;}
+  .data-table th,.data-table td{padding:7px 9px;}
+  .step{gap:10px;}
+  .step-num{width:28px;height:28px;font-size:0.74rem;border-radius:7px;}
+  .step-title{font-size:0.88rem;}
+  .step-desc{font-size:0.8rem;}
+  .callout{padding:11px 14px;font-size:0.83rem;}
+  .tryit{padding:16px;}
+  .tryit-title{font-size:0.88rem;}
+  .tryit-task{font-size:0.82rem;}
+  .expected-output{font-size:0.74rem;}
+  .kcheck-q{font-size:0.86rem;}
+  .kcheck-opt{font-size:0.82rem;padding:9px 12px;}
+  .mark-done-btn{width:100%;margin-top:6px;}
+  .lesson-footer{flex-direction:column;align-items:stretch;}
+  .foot-btn{justify-content:center;}
+}
+@media(max-width:480px){
+  .concept-grid{grid-template-columns:1fr;}
+  .hero-title{font-size:1.3rem;}
+  .sec-title{font-size:0.98rem;}
+  .reg-input{font-size:16px;}
+  .live-textarea{font-size:0.75rem;}
+}
+@media(max-width:360px){
+  .hero-title{font-size:1.15rem;}
+  .live-tabs{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <div class="nav-logo-icon">C++</div>
+    <div>
+      <div class="nav-title">Computer Fundamentals and Programming</div>
+      <div class="nav-sub">BS Civil Engineering</div>
+      <div class="nav-instructor">Instructor: DEBULGADO, S.M.G</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link home-link">🏠 Home</a>
+    <div class="nav-divider"></div>
+    <a href="lesson.html" class="nav-link active">📘 Lesson</a>
+    <a href="quiz.html" class="nav-link quiz-link">📝 Take Quiz →</a>
+    <a href="practical.html" class="nav-link practical-link">💻 Practical</a>
+  </div>
+</nav>
+
+<!-- STUDENT REGISTRATION -->
+<div class="reg-bar">
+  <span class="reg-label">👤 Student Name:</span>
+  <input class="reg-input" id="stu-name" type="text" placeholder="e.g. Juan dela Cruz" maxlength="60">
+  <input class="reg-input" id="stu-section" type="text" placeholder="Section (e.g. CE-1A)" maxlength="20">
+  <button class="reg-btn" onclick="saveStudent()">Save ✓</button>
+  <span class="reg-status" id="reg-status">✅ Saved! You can now take the quiz.</span>
+</div>
+
+<!-- PROGRESS TRACKER -->
+<div class="progress-track">
+  <span class="pt-label">Lesson Progress</span>
+  <div class="pt-bar"><div class="pt-fill" id="pt-fill"></div></div>
+  <span class="pt-pct" id="pt-pct">0%</span>
+  <span class="pt-time" id="pt-time">⏱ 00:00</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-inner">
+    <div class="hero-badge"><span></span>Week 1 · Asynchronous Lesson</div>
+    <h1 class="hero-title">C++ <em>Fundamentals</em><br>Getting Started</h1>
+    <p class="hero-desc">Your first step into programming. This 2-hour lesson covers everything you need to write, understand, and run your first C++ programs — with hands-on exercises and a live code runner.</p>
+    <div class="hero-stats">
+      <div class="hstat"><div class="hstat-icon">🕐</div><div><div class="hstat-val">2 Hours</div><div class="hstat-lbl">Lesson Duration</div></div></div>
+      <div class="hstat"><div class="hstat-icon">📚</div><div><div class="hstat-val">5 Sections</div><div class="hstat-lbl">With exercises</div></div></div>
+      <div class="hstat"><div class="hstat-icon">💻</div><div><div class="hstat-val">Live Compiler</div><div class="hstat-lbl">Run code in browser</div></div></div>
+      <div class="hstat"><div class="hstat-icon">🎯</div><div><div class="hstat-val">Beginner</div><div class="hstat-lbl">No experience needed</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- QUICK LINKS BAR -->
+<div class="quick-links-bar">
+  <span class="ql-label">Jump to</span>
+  <span class="ql-btn" onclick="jumpTo('sec-0')">📘 Intro to C++</span>
+  <span class="ql-btn" onclick="jumpTo('sec-1')">👋 Hello World</span>
+  <span class="ql-btn ql-live" onclick="jumpTo('live-compiler')">🖥 Live Code Runner</span>
+  <span class="ql-btn" onclick="jumpTo('sec-2')">📦 Variables</span>
+  <span class="ql-btn" onclick="jumpTo('sec-3')">⌨️ Input / Output</span>
+  <span class="ql-btn" onclick="jumpTo('sec-4')">🔢 Operators</span>
+  <div class="ql-divider"></div>
+  <a href="quiz.html" class="ql-btn ql-quiz">📝 Take Quiz →</a>
+  <a href="practical.html" class="ql-btn ql-practical">💻 Practical →</a>
+</div>
+
+<!-- MAIN -->
+<div class="main-wrap">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">Lesson Sections</div>
+      <div class="sb-item active" id="sb-0" onclick="jumpTo('sec-0')"><div class="sb-dot"></div>Introduction to C++<span class="sb-dur">20 min</span></div>
+      <div class="sb-item" id="sb-1" onclick="jumpTo('sec-1')"><div class="sb-dot"></div>Your First Program<span class="sb-dur">25 min</span></div>
+      <div class="sb-item" id="sb-2" onclick="jumpTo('sec-2')"><div class="sb-dot"></div>Variables & Data Types<span class="sb-dur">25 min</span></div>
+      <div class="sb-item" id="sb-3" onclick="jumpTo('sec-3')"><div class="sb-dot"></div>Input & Output<span class="sb-dur">25 min</span></div>
+      <div class="sb-item" id="sb-4" onclick="jumpTo('sec-4')"><div class="sb-dot"></div>Operators & Expressions<span class="sb-dur">25 min</span></div>
+    </div>
+    <div class="sb-section" style="margin-top:16px;">
+      <div class="sb-section-title">Quick Links</div>
+      <div class="sb-item" onclick="jumpTo('live-compiler')"><div class="sb-dot" style="background:var(--accent2)"></div>🖥 Live Code Runner</div>
+      <div class="sb-item" href="quiz.html" onclick="window.location='quiz.html'"><div class="sb-dot" style="background:var(--accent)"></div>📝 Take the Quiz</div>
+      <div class="sb-item" onclick="window.location='practical.html'" style="color:#b44fff;"><div class="sb-dot" style="background:#7b2fff"></div>💻 Practical Assessment</div>
+    </div>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ═══ SECTION 0: INTRO ═══ -->
+    <div class="lesson-section" id="sec-0">
+      <div class="sec-header">
+        <div class="sec-number">01</div>
+        <div class="sec-meta">
+          <div class="sec-tag">Section 1 of 5</div>
+          <div class="sec-title">Introduction to C++</div>
+          <div class="sec-duration">⏱ ~20 minutes</div>
+        </div>
+      </div>
+
+      <p class="body-text"><strong>C++</strong> is one of the most powerful and widely used programming languages in the world. It was created by <strong>Bjarne Stroustrup</strong> in 1979 as an extension of the C language, adding object-oriented features while keeping C's performance and efficiency.</p>
+      <p class="body-text" style="margin-top:14px;">As a <strong>BS Civil Engineering</strong> student, you may wonder — why do I need to learn programming? The answer is simple: modern civil engineering relies heavily on software for structural analysis, cost estimation, material modeling, and automated calculations. Learning C++ gives you the foundation to write your own engineering tools.</p>
+
+      <div class="concept-grid" style="margin-top:24px;">
+        <div class="concept-card" onclick="openModal('structural')">
+          <div class="cc-icon">🏗️</div>
+          <div class="cc-title">Structural Analysis</div>
+          <div class="cc-desc">Automate load calculations and beam deflection formulas</div>
+          <div class="cc-tap-hint">👆 Click to see C++ example</div>
+        </div>
+        <div class="concept-card" onclick="openModal('area')">
+          <div class="cc-icon">📐</div>
+          <div class="cc-title">Area & Volume</div>
+          <div class="cc-desc">Compute areas, volumes, and material quantities instantly</div>
+          <div class="cc-tap-hint">👆 Click to see C++ example</div>
+        </div>
+        <div class="concept-card" onclick="openModal('cost')">
+          <div class="cc-icon">💰</div>
+          <div class="cc-title">Cost Estimation</div>
+          <div class="cc-desc">Build programs that calculate construction costs automatically</div>
+          <div class="cc-tap-hint">👆 Click to see C++ example</div>
+        </div>
+        <div class="concept-card" onclick="openModal('data')">
+          <div class="cc-icon">📊</div>
+          <div class="cc-title">Data Processing</div>
+          <div class="cc-desc">Process survey data, soil tests, and load tables efficiently</div>
+          <div class="cc-tap-hint">👆 Click to see C++ example</div>
+        </div>
+      </div>
+
+      <!-- ══ AUTOCAD BIG HIGHLIGHT BANNER ══ -->
+      <div class="autocad-banner" onclick="openModal('autocad')">
+        <div class="acb-glow"></div>
+        <div class="acb-inner">
+          <div class="acb-left">
+            <div class="acb-eyebrow">
+              <span class="acb-dot"></span>
+              Coming Soon in Your Program
+            </div>
+            <div class="acb-title">You will use <span class="acb-hl">AutoCAD</span> in your future subjects</div>
+            <div class="acb-desc">AutoCAD — the industry-standard engineering design software used by civil engineers worldwide — was <strong>built using C++</strong>. The programming skills you are learning right now are the same foundations that power AutoCAD, SAP2000, ETABS, and Civil 3D.</div>
+            <!-- 2D / 3D Toggle -->
+            <div class="acb-view-tabs" id="acb-tabs" onclick="event.stopPropagation()">
+              <button class="acb-tab active" onclick="setACBView('2d',this);event.stopPropagation()">📐 2D Floor Plan</button>
+              <button class="acb-tab" onclick="setACBView('3d',this);event.stopPropagation()">🏛️ 3D Model</button>
+            </div>
+            <div class="acb-cta">
+              <span class="acb-cta-btn" onclick="event.stopPropagation();openModal('autocad')">🖥️ See Full AutoCAD Preview →</span>
+            </div>
+          </div>
+          <div class="acb-right">
+            <!-- 2D FLOOR PLAN VIEW -->
+            <div class="acb-screen" id="acb-view-2d">
+              <div class="acb-screen-bar">
+                <div style="display:flex;gap:4px">
+                  <div style="width:9px;height:9px;border-radius:50%;background:#f85149"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#f0a84b"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#23d18b"></div>
+                </div>
+                <span style="font-family:'Fira Code',monospace;font-size:0.58rem;color:#3a5070;margin-left:8px;">AutoCAD — 2D Floor Plan</span>
+                <span style="font-family:'Fira Code',monospace;font-size:0.55rem;color:#1a6040;margin-left:auto;background:rgba(34,211,164,0.1);padding:1px 7px;border-radius:4px;border:1px solid rgba(34,211,164,0.2);">TOP VIEW</span>
+              </div>
+              <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;background:#06111e;flex:1;">
+                <!-- Grid -->
+                <defs>
+                  <pattern id="grid2d" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#0b1e30" stroke-width="0.5"/>
+                  </pattern>
+                </defs>
+                <rect width="300" height="240" fill="url(#grid2d)"/>
+
+                <!-- ─── OUTER BOUNDARY (32' x 45' house) ─── -->
+                <rect x="20" y="15" width="260" height="210" fill="rgba(96,165,250,0.03)" stroke="#4080c0" stroke-width="3"/>
+
+                <!-- ─── INNER WALLS ─── -->
+                <!-- Vertical center divider (splits left/right) -->
+                <line x1="155" y1="15" x2="155" y2="130" stroke="#60a5fa" stroke-width="2"/>
+                <!-- Horizontal mid divider top half -->
+                <line x1="20" y1="90" x2="155" y2="90" stroke="#60a5fa" stroke-width="2"/>
+                <!-- Kitchen wall right side of center -->
+                <line x1="155" y1="15" x2="155" y2="90" stroke="#60a5fa" stroke-width="2"/>
+                <!-- Staircase box -->
+                <rect x="68" y="90" width="87" height="65" fill="rgba(249,195,58,0.06)" stroke="#60a5fa" stroke-width="1.5"/>
+                <!-- Horizontal lower divider -->
+                <line x1="20" y1="155" x2="280" y2="155" stroke="#60a5fa" stroke-width="2"/>
+                <!-- Vertical lower divider -->
+                <line x1="155" y1="130" x2="155" y2="225" stroke="#60a5fa" stroke-width="2"/>
+                <!-- A.Toilet left upper -->
+                <rect x="20" y="90" width="48" height="40" fill="rgba(34,211,164,0.05)" stroke="#60a5fa" stroke-width="1.5"/>
+                <!-- A.Toilet left lower -->
+                <rect x="20" y="155" width="48" height="32" fill="rgba(34,211,164,0.05)" stroke="#60a5fa" stroke-width="1.5"/>
+                <!-- C.Toilet center lower -->
+                <rect x="68" y="155" width="55" height="32" fill="rgba(34,211,164,0.05)" stroke="#60a5fa" stroke-width="1.5"/>
+
+                <!-- ─── ROOM LABELS ─── -->
+                <text x="87" y="56" fill="#2060a0" font-size="7.5" text-anchor="middle" font-family="monospace" font-weight="bold">BED ROOM</text>
+                <text x="87" y="66" fill="#1a5090" font-size="6" text-anchor="middle" font-family="monospace">12'-0" x 10'-0"</text>
+
+                <text x="216" y="48" fill="#2060a0" font-size="7.5" text-anchor="middle" font-family="monospace" font-weight="bold">BED ROOM</text>
+                <text x="216" y="58" fill="#1a5090" font-size="6" text-anchor="middle" font-family="monospace">10'-4" x 12'-0"</text>
+
+                <text x="188" y="42" fill="#2060a0" font-size="7" text-anchor="middle" font-family="monospace" font-weight="bold">KITCHEN</text>
+                <text x="154" y="52" fill="#1a5090" font-size="5.5" text-anchor="middle" font-family="monospace">5'-0"x10'-0"</text>
+
+                <text x="111" y="120" fill="#2a5040" font-size="6.5" text-anchor="middle" font-family="monospace" font-weight="bold">STAIR</text>
+                <text x="111" y="130" fill="#2a5040" font-size="5.5" text-anchor="middle" font-family="monospace">7'-0"x14'-6"</text>
+
+                <text x="216" y="118" fill="#2060a0" font-size="7" text-anchor="middle" font-family="monospace" font-weight="bold">DINING</text>
+                <text x="216" y="128" fill="#1a5090" font-size="5.5" text-anchor="middle" font-family="monospace">13'-3" x 16'-4"</text>
+
+                <text x="87" y="186" fill="#2060a0" font-size="7.5" text-anchor="middle" font-family="monospace" font-weight="bold">M. BED ROOM</text>
+                <text x="87" y="197" fill="#1a5090" font-size="6" text-anchor="middle" font-family="monospace">15'-9" x 10'-0"</text>
+
+                <text x="216" y="186" fill="#2060a0" font-size="7.5" text-anchor="middle" font-family="monospace" font-weight="bold">BED ROOM</text>
+                <text x="216" y="197" fill="#1a5090" font-size="6" text-anchor="middle" font-family="monospace">12'-0" x 12'-0"</text>
+
+                <text x="44" y="116" fill="#1a4a3a" font-size="5.5" text-anchor="middle" font-family="monospace">A.TOILET</text>
+                <text x="44" y="123" fill="#1a4a3a" font-size="4.5" text-anchor="middle" font-family="monospace">7'-0"x3'-9"</text>
+
+                <text x="44" y="168" fill="#1a4a3a" font-size="5.5" text-anchor="middle" font-family="monospace">A.TOILET</text>
+                <text x="44" y="176" fill="#1a4a3a" font-size="4.5" text-anchor="middle" font-family="monospace">5'-0"x3'-9"</text>
+
+                <text x="95" y="168" fill="#1a4a3a" font-size="5.5" text-anchor="middle" font-family="monospace">C.TOILET</text>
+                <text x="95" y="176" fill="#1a4a3a" font-size="4.5" text-anchor="middle" font-family="monospace">6'-7"x3'-9"</text>
+
+                <!-- ─── STAIRCASE DETAIL ─── -->
+                <line x1="68" y1="97" x2="155" y2="97" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="104" x2="155" y2="104" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="111" x2="155" y2="111" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="118" x2="155" y2="118" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="125" x2="155" y2="125" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="132" x2="155" y2="132" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="139" x2="155" y2="139" stroke="#c8a820" stroke-width="0.7"/>
+                <line x1="68" y1="146" x2="155" y2="146" stroke="#c8a820" stroke-width="0.7"/>
+                <!-- Arrow up -->
+                <line x1="111" y1="152" x2="111" y2="93" stroke="#c8a820" stroke-width="1.2"/>
+                <polygon points="111,91 108,97 114,97" fill="#c8a820"/>
+
+                <!-- ─── DOORS ─── -->
+                <!-- Bed room 1 door (bottom) -->
+                <line x1="105" y1="90" x2="125" y2="90" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M105,90 Q105,70 125,90" fill="none" stroke="#22d3a4" stroke-width="1.2"/>
+                <!-- Bed room 2 door -->
+                <line x1="175" y1="15" x2="195" y2="15" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M175,15 Q175,35 195,15" fill="none" stroke="#22d3a4" stroke-width="1.2"/>
+                <!-- Kitchen door -->
+                <line x1="155" y1="55" x2="155" y2="73" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M155,55 Q173,55 155,73" fill="none" stroke="#22d3a4" stroke-width="1.2"/>
+                <!-- Main entry door (bottom center) -->
+                <line x1="120" y1="225" x2="148" y2="225" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M120,225 Q120,202 148,225" fill="rgba(34,211,164,0.05)" stroke="#22d3a4" stroke-width="1.2"/>
+                <!-- MBed door -->
+                <line x1="20" y1="168" x2="20" y2="188" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M20,168 Q38,168 20,188" fill="none" stroke="#22d3a4" stroke-width="1.2"/>
+                <!-- Bed room lower right door -->
+                <line x1="210" y1="155" x2="232" y2="155" stroke="#06111e" stroke-width="3.5"/>
+                <path d="M210,155 Q210,135 232,155" fill="none" stroke="#22d3a4" stroke-width="1.2"/>
+
+                <!-- ─── WINDOWS (yellow marks) ─── -->
+                <!-- Top wall windows -->
+                <line x1="38" y1="15" x2="60" y2="15" stroke="#f9c33a" stroke-width="3"/>
+                <line x1="44" y1="12" x2="44" y2="18" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="54" y1="12" x2="54" y2="18" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="200" y1="15" x2="225" y2="15" stroke="#f9c33a" stroke-width="3"/>
+                <line x1="207" y1="12" x2="207" y2="18" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="218" y1="12" x2="218" y2="18" stroke="#f9c33a" stroke-width="1.2"/>
+                <!-- Right wall windows -->
+                <line x1="280" y1="60" x2="280" y2="85" stroke="#f9c33a" stroke-width="3"/>
+                <line x1="277" y1="67" x2="283" y2="67" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="277" y1="78" x2="283" y2="78" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="280" y1="170" x2="280" y2="200" stroke="#f9c33a" stroke-width="3"/>
+                <line x1="277" y1="178" x2="283" y2="178" stroke="#f9c33a" stroke-width="1.2"/>
+                <line x1="277" y1="192" x2="283" y2="192" stroke="#f9c33a" stroke-width="1.2"/>
+                <!-- Bottom wall windows (veranda) -->
+                <line x1="30" y1="225" x2="58" y2="225" stroke="#22d3a4" stroke-width="2.5"/>
+                <line x1="210" y1="225" x2="240" y2="225" stroke="#22d3a4" stroke-width="2.5"/>
+
+                <!-- ─── VERANDA (hatched areas) ─── -->
+                <rect x="20" y="215" width="46" height="10" fill="rgba(34,211,164,0.08)" stroke="#22d3a4" stroke-width="1"/>
+                <text x="43" y="222" fill="#1a4a3a" font-size="5" text-anchor="middle" font-family="monospace">VER.</text>
+                <rect x="162" y="215" width="46" height="10" fill="rgba(34,211,164,0.08)" stroke="#22d3a4" stroke-width="1"/>
+                <text x="185" y="222" fill="#1a4a3a" font-size="5" text-anchor="middle" font-family="monospace">VER.</text>
+
+                <!-- ─── DIMENSION LINES ─── -->
+                <line x1="20" y1="232" x2="280" y2="232" stroke="#2a5080" stroke-width="0.8"/>
+                <line x1="20" y1="229" x2="20" y2="235" stroke="#2a5080" stroke-width="0.8"/>
+                <line x1="280" y1="229" x2="280" y2="235" stroke="#2a5080" stroke-width="0.8"/>
+                <text x="150" y="239" fill="#2a5080" font-size="5.5" text-anchor="middle" font-family="monospace">32'-0"</text>
+                <line x1="290" y1="15" x2="290" y2="225" stroke="#2a5080" stroke-width="0.8"/>
+                <line x1="287" y1="15" x2="293" y2="15" stroke="#2a5080" stroke-width="0.8"/>
+                <line x1="287" y1="225" x2="293" y2="225" stroke="#2a5080" stroke-width="0.8"/>
+                <text x="298" y="125" fill="#2a5080" font-size="5.5" text-anchor="middle" font-family="monospace" transform="rotate(90,298,125)">45'-0"</text>
+
+                <!-- ─── CAD CURSOR ─── -->
+                <circle cx="155" cy="130" r="3.5" fill="#22d3a4" opacity="0.9"/>
+                <line x1="148" y1="130" x2="162" y2="130" stroke="#22d3a4" stroke-width="1.2"/>
+                <line x1="155" y1="123" x2="155" y2="137" stroke="#22d3a4" stroke-width="1.2"/>
+              </svg>
+              <div style="background:#040e1a;padding:6px 12px;font-family:'Fira Code',monospace;font-size:0.6rem;color:#22d3a4;border-top:1px solid #0f2030;display:flex;gap:14px;">
+                <span><span style="color:#2a4060;">VIEW: </span>TOP</span>
+                <span><span style="color:#2a4060;">SCALE: </span><span style="color:#f9c33a;">1:75</span></span>
+                <span><span style="color:#2a4060;">AREA: </span><span style="color:#f9c33a;">1,440 sq.ft</span></span>
+                <span style="margin-left:auto;color:#1a4060;">1ST FLOOR</span>
+              </div>
+            </div>
+
+            <!-- 3D ISOMETRIC VIEW -->
+            <div class="acb-screen" id="acb-view-3d" style="display:none;">
+              <div class="acb-screen-bar">
+                <div style="display:flex;gap:4px">
+                  <div style="width:9px;height:9px;border-radius:50%;background:#f85149"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#f0a84b"></div>
+                  <div style="width:9px;height:9px;border-radius:50%;background:#23d18b"></div>
+                </div>
+                <span style="font-family:'Fira Code',monospace;font-size:0.58rem;color:#3a5070;margin-left:8px;">AutoCAD — 3D Model</span>
+                <span style="font-family:'Fira Code',monospace;font-size:0.55rem;color:#6040a0;margin-left:auto;background:rgba(123,47,255,0.12);padding:1px 7px;border-radius:4px;border:1px solid rgba(123,47,255,0.25);">SE ISO</span>
+              </div>
+              <svg viewBox="0 0 300 240" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;flex:1;">
+                <defs>
+                  <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1a2540"/>
+                    <stop offset="100%" stop-color="#0a1525"/>
+                  </linearGradient>
+                  <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0e180e"/>
+                    <stop offset="100%" stop-color="#06100a"/>
+                  </linearGradient>
+                  <linearGradient id="frontWall" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1e3a5a"/>
+                    <stop offset="100%" stop-color="#132845"/>
+                  </linearGradient>
+                  <linearGradient id="sideWall" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#0e2038"/>
+                    <stop offset="100%" stop-color="#0a1828"/>
+                  </linearGradient>
+                  <linearGradient id="roof1" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#2a4060"/>
+                    <stop offset="100%" stop-color="#162840"/>
+                  </linearGradient>
+                  <linearGradient id="roof2" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="#1e3050"/>
+                    <stop offset="100%" stop-color="#0e1a30"/>
+                  </linearGradient>
+                </defs>
+
+                <!-- Sky & Ground -->
+                <rect width="300" height="240" fill="url(#sky)"/>
+                <ellipse cx="150" cy="210" rx="140" ry="22" fill="url(#ground)"/>
+
+                <!-- Ground grid -->
+                <line x1="10" y1="210" x2="290" y2="210" stroke="#0a180a" stroke-width="0.6"/>
+                <line x1="40" y1="215" x2="260" y2="205" stroke="#0a180a" stroke-width="0.4"/>
+                <line x1="70" y1="218" x2="230" y2="202" stroke="#0a180a" stroke-width="0.3"/>
+
+                <!-- ── GROUND FLOOR ── -->
+                <!-- Front face -->
+                <polygon points="30,175 175,175 175,115 30,115" fill="url(#frontWall)" stroke="#4a80c0" stroke-width="1.2"/>
+                <!-- Right face -->
+                <polygon points="175,175 260,155 260,95 175,115" fill="url(#sideWall)" stroke="#2a5080" stroke-width="1.2"/>
+                <!-- Roof top face -->
+                <polygon points="30,115 175,115 260,95 115,95" fill="url(#roof1)" stroke="#4a80c0" stroke-width="1.2"/>
+
+                <!-- ── UPPER FLOOR (right side, set back) ── -->
+                <polygon points="108,115 175,115 175,68 108,68" fill="#162438" stroke="#4a80c0" stroke-width="1"/>
+                <polygon points="175,115 230,98 230,52 175,68" fill="#0e1c2e" stroke="#2a5080" stroke-width="1"/>
+                <polygon points="108,68 175,68 230,52 163,52" fill="url(#roof2)" stroke="#4a80c0" stroke-width="1"/>
+
+                <!-- ── GROUND FLOOR WINDOWS ── -->
+                <!-- Front large windows -->
+                <rect x="42" y="126" width="35" height="28" rx="2" fill="rgba(14,165,233,0.18)" stroke="#22d3a4" stroke-width="1"/>
+                <line x1="59" y1="126" x2="59" y2="154" stroke="#22d3a4" stroke-width="0.5"/>
+                <line x1="42" y1="140" x2="77" y2="140" stroke="#22d3a4" stroke-width="0.5"/>
+                <rect x="43" y="127" width="15" height="12" fill="rgba(14,165,233,0.12)"/>
+
+                <rect x="90" y="126" width="40" height="28" rx="2" fill="rgba(14,165,233,0.18)" stroke="#22d3a4" stroke-width="1"/>
+                <line x1="110" y1="126" x2="110" y2="154" stroke="#22d3a4" stroke-width="0.5"/>
+                <line x1="90" y1="140" x2="130" y2="140" stroke="#22d3a4" stroke-width="0.5"/>
+                <rect x="91" y="127" width="18" height="12" fill="rgba(14,165,233,0.12)"/>
+
+                <!-- Ground floor right side window -->
+                <polygon points="183,128 213,118 213,138 183,148" fill="rgba(14,165,233,0.15)" stroke="#2a5080" stroke-width="0.8"/>
+                <line x1="198" y1="123" x2="198" y2="143" stroke="#2a5080" stroke-width="0.5"/>
+
+                <!-- ── MAIN DOOR ── -->
+                <rect x="136" y="148" width="24" height="27" rx="1.5" fill="rgba(0,0,0,0.5)" stroke="#22d3a4" stroke-width="1"/>
+                <line x1="148" y1="148" x2="148" y2="175" stroke="#22d3a4" stroke-width="0.5"/>
+                <circle cx="156" cy="163" r="1.8" fill="#22d3a4"/>
+                <!-- Door step -->
+                <polygon points="130,175 166,175 170,180 126,180" fill="#0a2030" stroke="#22d3a4" stroke-width="0.7"/>
+
+                <!-- ── UPPER FLOOR WINDOWS ── -->
+                <rect x="118" y="78" width="24" height="18" rx="1.5" fill="rgba(14,165,233,0.18)" stroke="#22d3a4" stroke-width="0.9"/>
+                <line x1="130" y1="78" x2="130" y2="96" stroke="#22d3a4" stroke-width="0.5"/>
+                <rect x="148" y="78" width="18" height="18" rx="1.5" fill="rgba(14,165,233,0.18)" stroke="#22d3a4" stroke-width="0.9"/>
+                <!-- Upper right side window -->
+                <polygon points="180,72 208,62 208,78 180,88" fill="rgba(14,165,233,0.12)" stroke="#2a5080" stroke-width="0.7"/>
+
+                <!-- ── ROOF RIDGE / DETAIL ── -->
+                <line x1="30" y1="115" x2="30" y2="175" stroke="rgba(96,165,250,0.35)" stroke-width="0.7" stroke-dasharray="3,2"/>
+                <line x1="175" y1="115" x2="175" y2="175" stroke="rgba(96,165,250,0.35)" stroke-width="0.7" stroke-dasharray="3,2"/>
+
+                <!-- ── FENCE / BOUNDARY ── -->
+                <line x1="15" y1="195" x2="285" y2="195" stroke="#0a2030" stroke-width="1.5"/>
+                <line x1="15" y1="192" x2="15" y2="198" stroke="#0a2030" stroke-width="1"/>
+                <line x1="285" y1="192" x2="285" y2="198" stroke="#0a2030" stroke-width="1"/>
+
+                <!-- ── TREES (simplified) ── -->
+                <ellipse cx="268" cy="185" rx="14" ry="18" fill="rgba(0,100,20,0.3)" stroke="rgba(0,150,30,0.4)" stroke-width="0.8"/>
+                <line x1="268" y1="195" x2="268" y2="203" stroke="#1a3010" stroke-width="1.5"/>
+                <ellipse cx="22" cy="188" rx="10" ry="13" fill="rgba(0,100,20,0.25)" stroke="rgba(0,150,30,0.3)" stroke-width="0.8"/>
+
+                <!-- ── DIMENSION ── -->
+                <line x1="30" y1="187" x2="175" y2="187" stroke="#1e4060" stroke-width="0.8"/>
+                <line x1="30" y1="184" x2="30" y2="190" stroke="#1e4060" stroke-width="0.8"/>
+                <line x1="175" y1="184" x2="175" y2="190" stroke="#1e4060" stroke-width="0.8"/>
+                <text x="102" y="186" fill="#1e4060" font-size="6" text-anchor="middle" font-family="monospace">32'-0"</text>
+
+                <!-- ── CAD CURSOR ── -->
+                <circle cx="175" cy="115" r="3.5" fill="#22d3a4" opacity="0.9"/>
+                <line x1="168" y1="115" x2="182" y2="115" stroke="#22d3a4" stroke-width="1.2"/>
+                <line x1="175" y1="108" x2="175" y2="122" stroke="#22d3a4" stroke-width="1.2"/>
+
+                <!-- Labels -->
+                <text x="285" y="20" fill="#1a3050" font-size="5" text-anchor="end" font-family="monospace">ORBIT VIEW</text>
+                <text x="285" y="27" fill="#1a3050" font-size="4.5" text-anchor="end" font-family="monospace">SE ISOMETRIC</text>
+                <text x="285" y="34" fill="#1a3050" font-size="4.5" text-anchor="end" font-family="monospace">VISUAL STYLE: REALISTIC</text>
+              </svg>
+              <div style="background:#05000e;padding:6px 12px;font-family:'Fira Code',monospace;font-size:0.6rem;color:#b44fff;border-top:1px solid #0f2030;display:flex;gap:14px;">
+                <span><span style="color:#2a1040;">VIEW: </span>SE ISO</span>
+                <span><span style="color:#2a1040;">VISUAL: </span><span style="color:#b44fff;">REALISTIC</span></span>
+                <span><span style="color:#2a1040;">FLOORS: </span><span style="color:#f9c33a;">2</span></span>
+                <span style="margin-left:auto;color:#1a1040;">3D SOLID</span>
+              </div>
+            </div>
+          </div>
+        </div><!-- end acb-inner -->
+      </div><!-- end autocad-banner -->
+
+      <!-- ── MODAL ── -->
+      <div class="modal-overlay" id="card-modal" onclick="closeModalOutside(event)">
+        <div class="modal-box" id="modal-box">
+          <div class="modal-hdr">
+            <div class="modal-hdr-left">
+              <div class="modal-micon" id="modal-icon">🏗️</div>
+              <div>
+                <div class="modal-mtitle" id="modal-title">Title</div>
+                <div class="modal-msub" id="modal-sub">C++ Application Example</div>
+              </div>
+            </div>
+            <button class="modal-close" onclick="closeModal()">✕</button>
+          </div>
+          <div class="modal-body">
+            <div id="modal-content"></div>
+          </div>
+        </div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:24px 0 12px;">How C++ Programs Work</h3>
+      <div class="steps">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Write Source Code</div><div class="step-desc">You type instructions in C++ using a text editor or IDE (like Code::Blocks or Dev-C++). This is your <strong>source file</strong> (.cpp extension).</div></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Compile</div><div class="step-desc">A <strong>compiler</strong> translates your human-readable C++ code into machine language (binary) that the computer can execute. It also checks for syntax errors.</div></div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Link</div><div class="step-desc">The <strong>linker</strong> combines your compiled code with any libraries you used (like iostream) to create the final executable file.</div></div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Execute</div><div class="step-desc">Your program runs! The computer follows your instructions line by line, from top to bottom.</div></div></div>
+      </div>
+
+      <div class="sec-complete show" id="done-0">
+        <div class="sec-complete-check">✅</div>
+        <div class="sec-complete-text"><strong>Section 1 Done!</strong>Continue to your first program below.</div>
+        <button class="mark-done-btn" onclick="markDone(0)">Mark Complete</button>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 1: HELLO WORLD ═══ -->
+    <div class="lesson-section" id="sec-1">
+      <div class="sec-header">
+        <div class="sec-number">02</div>
+        <div class="sec-meta">
+          <div class="sec-tag">Section 2 of 5</div>
+          <div class="sec-title">Your First C++ Program</div>
+          <div class="sec-duration">⏱ ~25 minutes</div>
+        </div>
+      </div>
+
+      <p class="body-text">Every programmer's first program is <strong>"Hello, World!"</strong> — a simple program that prints a message to the screen. It is a tradition that dates back to the 1970s, and it is the perfect way to learn the basic structure of any C++ program.</p>
+
+      <!-- CLEAR INSTRUCTIONS BLOCK -->
+      <div style="background:var(--s2);border:2px solid var(--accent);border-radius:16px;padding:26px 26px 20px;margin:22px 0;box-shadow:0 0 32px rgba(249,195,58,0.06);">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
+          <div style="background:var(--accent);border-radius:10px;width:38px;height:38px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">📋</div>
+          <div>
+            <div style="font-family:'Outfit',sans-serif;font-weight:800;font-size:1.05rem;color:var(--accent);">Student Instructions — What To Do In This Section</div>
+            <div style="font-size:0.75rem;color:var(--muted);margin-top:2px;">This is an <strong style="color:var(--text);">asynchronous lesson</strong>. Follow every step below <strong style="color:var(--text);">in order</strong>. Do not skip any step.</div>
+          </div>
+        </div>
+
+        <div style="height:1px;background:var(--border);margin:16px 0;"></div>
+
+        <!-- Step 1 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid var(--accent);margin-bottom:10px;">
+          <div style="background:var(--accent);color:#000;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">1</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">📖 Read the Hello World Code Below</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">Scroll down and carefully read the full <strong style="color:var(--text);">Hello World</strong> program. Do not run it yet — just read and try to understand each line. Pay attention to the comments (lines starting with <code style="color:var(--accent);background:rgba(249,195,58,0.08);padding:1px 6px;border-radius:4px;">//</code>) which explain what each part does.</div>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid var(--blue);margin-bottom:10px;">
+          <div style="background:var(--blue);color:#000;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">2</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">🎬 Use the Line-by-Line Walkthrough</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">Find the <strong style="color:var(--text);">"🎬 Line-by-Line Walkthrough"</strong> panel below the code. Click the <strong style="color:var(--accent);">Next Step →</strong> button to go through each line one at a time. Read the explanation on the right side. <strong style="color:var(--text);">Go through all 8 steps</strong> before moving on. This is the most important part of the section — do not skip it!</div>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid var(--accent2);margin-bottom:10px;">
+          <div style="background:var(--accent2);color:#000;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">3</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">⌨️ Type the Program in the Live Code Runner</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">Find the <strong style="color:var(--text);">"🖥 Live Code Runner"</strong> panel further below. The Hello World code is already loaded — but <strong style="color:var(--accent2);">clear it first</strong> and type it from scratch yourself. Do <strong style="color:var(--accent3);">NOT copy-paste</strong>. Typing the code yourself builds muscle memory and helps you spot your own errors. Every character matters in C++ — even a missing semicolon will cause an error.</div>
+          </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid var(--accent3);margin-bottom:10px;">
+          <div style="background:var(--accent3);color:#fff;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">4</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">▶ Click "Run Code" and Check Your Output</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">Once you have typed the program, click the green <strong style="color:var(--accent2);">▶ Run Code</strong> button. The output panel on the right should display:<br><br>
+            <code style="display:inline-block;background:rgba(58,249,195,0.08);border:1px solid rgba(58,249,195,0.2);border-radius:6px;padding:6px 12px;color:var(--accent2);font-family:'Fira Code',monospace;font-size:0.82rem;margin-top:4px;">Hello, World!</code><br><br>
+            If you see that — <strong style="color:var(--accent2);">congratulations, you ran your first C++ program!</strong> If you see an error, check for missing semicolons, incorrect spelling, or unclosed braces <code style="color:var(--accent);background:rgba(249,195,58,0.08);padding:1px 6px;border-radius:4px;">{ }</code>.</div>
+          </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid var(--muted);margin-bottom:10px;">
+          <div style="background:var(--muted);color:#000;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">5</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">✏️ Complete Exercise 1.1</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">At the bottom of this section, you will find <strong style="color:var(--text);">Exercise 1.1</strong>. Modify the Hello World program so it prints <strong>three lines</strong>: your full name, your course (BS Civil Engineering), and your section. Use three separate <code style="color:var(--blue);background:rgba(77,159,255,0.08);padding:1px 6px;border-radius:4px;">cout</code> statements. Run it and confirm the output is correct.</div>
+          </div>
+        </div>
+
+        <!-- Step 6 -->
+        <div style="display:flex;gap:14px;align-items:flex-start;padding:16px;background:var(--s3);border-radius:12px;border-left:4px solid #9b6dff;">
+          <div style="background:#9b6dff;color:#fff;font-weight:800;font-size:0.82rem;border-radius:8px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;">6</div>
+          <div>
+            <div style="font-weight:700;font-size:0.92rem;margin-bottom:5px;">🧠 Answer the Knowledge Check</div>
+            <div style="font-size:0.84rem;color:#99b0c8;line-height:1.7;">At the end of this section, there is a <strong style="color:var(--text);">Knowledge Check</strong> question. Answer it honestly — it is not graded, but it tells you if you understood the key concept. If you get it wrong, re-read the section before proceeding.</div>
+          </div>
+        </div>
+
+        <!-- Warning Banner -->
+        <div style="display:flex;align-items:center;gap:10px;background:rgba(249,58,122,0.07);border:1px solid rgba(249,58,122,0.25);border-radius:10px;padding:12px 16px;margin-top:14px;">
+          <span style="font-size:1.1rem;">⚠️</span>
+          <div style="font-size:0.82rem;color:#ffa8c0;line-height:1.6;"><strong style="color:var(--accent3);">Important Reminder:</strong> This lesson is asynchronous — it is self-paced, but you are still expected to complete <strong>all sections</strong> before your scheduled quiz. The <strong>quiz covers everything in this lesson</strong>. Budget at least <strong>2 hours</strong> to finish the full module properly.</div>
+        </div>
+
+      </div>
+
+      <div class="callout warn" style="margin-top:4px;">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Asynchronous Note:</strong> Since this is a self-paced lesson, there is no physical lab today. The <strong>Live Code Runner</strong> below replaces Code::Blocks or Dev-C++ for this session. In your next face-to-face class, you will install and use a proper IDE.</div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:24px 0 12px;">The Complete Hello World Program</h3>
+
+      <div class="code-wrap">
+        <div class="code-top">
+          <div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div>
+          <span class="code-filename">hello_world.cpp</span>
+          <button class="copy-btn" onclick="copyCode(this,'hw')">Copy</button>
+        </div>
+        <pre id="hw"><span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std<span class="op">;</span>
+
+<span class="kw">int</span> <span class="fn">main</span><span class="op">()</span> <span class="op">{</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+    <span class="kw">return</span> <span class="num">0</span><span class="op">;</span>
+<span class="op">}</span></pre>
+      </div>
+
+      <!-- ANIMATED DEMO -->
+      <h3 style="font-size:1rem;font-weight:700;margin:24px 0 12px;">🎬 Line-by-Line Walkthrough</h3>
+      <div class="demo-panel">
+        <div class="demo-header">
+          <div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div>
+          <div class="demo-title">Interactive Code Demo</div>
+          <div class="demo-badge">Step-by-Step</div>
+        </div>
+        <div class="demo-body">
+          <div class="demo-code">
+            <pre id="demo-code-display"></pre>
+          </div>
+          <div class="demo-explain">
+            <div class="demo-explain-title">What this line means:</div>
+            <div class="demo-explain-text" id="demo-explain-text">Click "Next Step" to begin the walkthrough.</div>
+          </div>
+        </div>
+        <div class="demo-controls">
+          <button class="demo-btn" onclick="demoPrev()">← Prev</button>
+          <button class="demo-btn primary" onclick="demoNext()" id="demo-next-btn">Next Step →</button>
+          <button class="demo-btn" onclick="demoReset()">↺ Reset</button>
+          <div class="demo-progress-dots" id="demo-dots"></div>
+        </div>
+      </div>
+
+      <!-- LIVE COMPILER -->
+      <h3 style="font-size:1rem;font-weight:700;margin:28px 0 12px;" id="live-compiler">🖥 Live Code Runner — Try It Yourself!</h3>
+      <div class="callout tip">
+        <div class="callout-icon">🚀</div>
+        <div class="callout-body"><strong>Your Task:</strong> Type the Hello World program in the editor below. Click <strong>▶ Run Code</strong> to execute it and see the output. This simulates running C++ in a real environment!</div>
+      </div>
+
+      <div class="live-panel">
+        <div class="live-header">
+          <div class="live-title">💻 C++ Live Editor</div>
+          <div class="live-badge">Interactive</div>
+          <div class="live-tabs">
+            <button class="live-tab active" onclick="setTab('hello')">Hello World</button>
+            <button class="live-tab" onclick="setTab('custom')">Custom Code</button>
+          </div>
+        </div>
+        <div class="live-editor-area">
+          <div class="live-editor">
+            <textarea class="live-textarea" id="live-code" spellcheck="false" autocorrect="off" autocapitalize="off">#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout &lt;&lt; "Hello, World!" &lt;&lt; endl;
+    return 0;
+}</textarea>
+          </div>
+          <div class="live-output-pane">
+            <div class="live-output-header">▶ Output</div>
+            <div class="live-output idle" id="live-output">Click "▶ Run Code" to see output here...</div>
+          </div>
+        </div>
+        <div class="live-footer">
+          <button class="run-btn" id="run-btn" onclick="runCode()">▶ Run Code</button>
+          <button class="reset-btn" onclick="resetCode()">↺ Reset</button>
+          <span class="run-status" id="run-status"></span>
+        </div>
+      </div>
+
+      <div class="tryit">
+        <div class="tryit-header">
+          <div class="tryit-icon">✏️</div>
+          <div class="tryit-title">Exercise 1.1 — Modify Hello World</div>
+          <div class="tryit-badge">Try It!</div>
+        </div>
+        <div class="tryit-task">Modify the program in the Live Editor above to print <strong>three lines</strong>: your name, your course, and your section. Use three separate <code style="color:var(--blue)">cout</code> statements.</div>
+        <div class="expected-label">Expected Output:</div>
+        <div class="expected-output">Juan dela Cruz
+BS Civil Engineering
+Section CE-1A</div>
+      </div>
+
+      <!-- ANATOMY TABLE -->
+      <h3 style="font-size:1rem;font-weight:700;margin:24px 0 12px;">Program Structure — Every Part Explained</h3>
+      <table class="data-table">
+        <tr><th>Line</th><th>Code</th><th>What It Does</th></tr>
+        <tr><td>1</td><td class="mono">// comment</td><td>A comment — ignored by the compiler, used to explain your code to humans</td></tr>
+        <tr><td>4</td><td class="mono">#include &lt;iostream&gt;</td><td>Tells the compiler to include the iostream library which provides <code class="mono">cout</code> and <code class="mono">cin</code></td></tr>
+        <tr><td>5</td><td class="mono">using namespace std;</td><td>Allows you to use <code class="mono">cout</code> instead of <code class="mono">std::cout</code> — saves typing</td></tr>
+        <tr><td>7</td><td class="mono">int main() { }</td><td>The main function — every C++ program MUST have this. Execution starts here.</td></tr>
+        <tr><td>8</td><td class="mono">cout &lt;&lt; "..." &lt;&lt; endl;</td><td>Prints text to the screen. <code class="mono">endl</code> moves the cursor to a new line</td></tr>
+        <tr><td>9</td><td class="mono">return 0;</td><td>Tells the OS the program finished without errors. 0 means success.</td></tr>
+      </table>
+
+      <!-- KNOWLEDGE CHECK -->
+      <div class="kcheck" id="kc-0">
+        <div class="kcheck-title">🧠 Knowledge Check</div>
+        <div class="kcheck-q">Which line tells the compiler to include the input/output library?</div>
+        <div class="kcheck-opts">
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-0',false)"><span class="kcheck-letter">A</span>using namespace std;</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-0',true)"><span class="kcheck-letter">B</span>#include &lt;iostream&gt;</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-0',false)"><span class="kcheck-letter">C</span>int main()</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-0',false)"><span class="kcheck-letter">D</span>return 0;</div>
+        </div>
+        <div class="kcheck-fb" id="kc-0-fb"></div>
+      </div>
+
+      <div class="sec-complete show" id="done-1">
+        <div class="sec-complete-check">✅</div>
+        <div class="sec-complete-text"><strong>Section 2 Done!</strong>Move on to Variables & Data Types.</div>
+        <button class="mark-done-btn" onclick="markDone(1)">Mark Complete</button>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 2: VARIABLES ═══ -->
+    <div class="lesson-section" id="sec-2">
+      <div class="sec-header">
+        <div class="sec-number">03</div>
+        <div class="sec-meta">
+          <div class="sec-tag">Section 3 of 5</div>
+          <div class="sec-title">Variables & Data Types</div>
+          <div class="sec-duration">⏱ ~25 minutes</div>
+        </div>
+      </div>
+
+      <p class="body-text">A <strong>variable</strong> is like a labeled box in your computer's memory where you store a value. Before you can use a variable in C++, you must <strong>declare</strong> it — telling the compiler its name and the type of data it will hold.</p>
+
+      <div class="callout tip">
+        <div class="callout-icon">📦</div>
+        <div class="callout-body"><strong>Civil Engineering Analogy:</strong> Think of a variable like a material storage bin on a construction site. You label each bin (name) and specify what it holds — cement bags (int), pipe lengths (double), room labels (string). You can't store cement in a pipe bin!</div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:20px 0 12px;">C++ Data Types</h3>
+      <table class="data-table">
+        <tr><th>Data Type</th><th>Stores</th><th>Size</th><th>Example</th></tr>
+        <tr><td class="mono">int</td><td>Whole numbers (no decimal)</td><td>4 bytes</td><td class="mono">int bags = 50;</td></tr>
+        <tr><td class="mono">float</td><td>Decimal numbers (7 digits precision)</td><td>4 bytes</td><td class="mono">float gpa = 1.75f;</td></tr>
+        <tr><td class="mono">double</td><td>Decimal numbers (15 digits precision)</td><td>8 bytes</td><td class="mono">double area = 125.50;</td></tr>
+        <tr><td class="mono">char</td><td>Single character</td><td>1 byte</td><td class="mono">char grade = 'A';</td></tr>
+        <tr><td class="mono">string</td><td>Text (multiple characters)</td><td>Variable</td><td class="mono">string name = "Juan";</td></tr>
+        <tr><td class="mono">bool</td><td>True (1) or False (0) only</td><td>1 byte</td><td class="mono">bool passed = true;</td></tr>
+      </table>
+
+      <div class="callout warn" style="margin-top:4px;">
+        <div class="callout-icon">⚠️</div>
+        <div class="callout-body"><strong>Use double over float</strong> for engineering calculations. Float only has 7 decimal digits of precision — not enough for accurate engineering measurements. Double gives you 15 digits.</div>
+      </div>
+
+      <h3 style="font-size:1rem;font-weight:700;margin:20px 0 12px;">Declaring Variables — Syntax Rules</h3>
+      <div class="code-wrap">
+        <div class="code-top"><div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div><span class="code-filename">variables.cpp</span><button class="copy-btn" onclick="copyCode(this,'var-code')">Copy</button></div>
+        <pre id="var-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">#include</span> <span class="str">&lt;string&gt;</span>
+<span class="kw">using namespace</span> std<span class="op">;</span>
+
+<span class="kw">int</span> <span class="fn">main</span><span class="op">()</span> <span class="op">{</span>
+    <span class="cm">// ── Declaring Variables ──</span>
+    <span class="kw">int</span>    numBags  <span class="op">=</span> <span class="num">50</span><span class="op">;</span>          <span class="cm">// number of cement bags</span>
+    <span class="kw">double</span> pricePerBag <span class="op">=</span> <span class="num">280.50</span><span class="op">;</span>    <span class="cm">// price in PHP</span>
+    <span class="kw">string</span> projectName <span class="op">=</span> <span class="str">"Road A"</span><span class="op">;</span>  <span class="cm">// project label</span>
+    <span class="kw">bool</span>   isCompleted <span class="op">=</span> <span class="kw">false</span><span class="op">;</span>     <span class="cm">// completion status</span>
+
+    <span class="cm">// ── Displaying Values ──</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Project: "</span>   <span class="op">&lt;&lt;</span> projectName  <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Bags: "</span>      <span class="op">&lt;&lt;</span> numBags      <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Price/bag: "</span> <span class="op">&lt;&lt;</span> pricePerBag  <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+
+    <span class="kw">return</span> <span class="num">0</span><span class="op">;</span>
+<span class="op">}</span></pre>
+      </div>
+
+      <div class="tryit">
+        <div class="tryit-header">
+          <div class="tryit-icon">✏️</div>
+          <div class="tryit-title">Exercise 2.1 — Declare Your Own Variables</div>
+          <div class="tryit-badge">Try It!</div>
+        </div>
+        <div class="tryit-task">In the Live Code Runner, write a program that declares and prints the following:<br><br>
+          • <strong>Your full name</strong> (string)<br>
+          • <strong>Your age</strong> (int)<br>
+          • <strong>Your GPA last semester</strong> (double)<br>
+          • <strong>Whether you passed last semester</strong> (bool — use 1 for true)
+        </div>
+        <div class="expected-label">Expected Output:</div>
+        <div class="expected-output">Name: Juan dela Cruz
+Age: 19
+GPA: 1.75
+Passed: 1</div>
+      </div>
+
+      <div class="kcheck" id="kc-1">
+        <div class="kcheck-title">🧠 Knowledge Check</div>
+        <div class="kcheck-q">A civil engineer needs to store a measurement of 15.375 meters. Which data type is BEST?</div>
+        <div class="kcheck-opts">
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-1',false)"><span class="kcheck-letter">A</span>int</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-1',false)"><span class="kcheck-letter">B</span>char</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-1',true)"><span class="kcheck-letter">C</span>double</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-1',false)"><span class="kcheck-letter">D</span>bool</div>
+        </div>
+        <div class="kcheck-fb" id="kc-1-fb"></div>
+      </div>
+
+      <div class="sec-complete show" id="done-2">
+        <div class="sec-complete-check">✅</div>
+        <div class="sec-complete-text"><strong>Section 3 Done!</strong>Continue to Input & Output.</div>
+        <button class="mark-done-btn" onclick="markDone(2)">Mark Complete</button>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 3: I/O ═══ -->
+    <div class="lesson-section" id="sec-3">
+      <div class="sec-header">
+        <div class="sec-number">04</div>
+        <div class="sec-meta">
+          <div class="sec-tag">Section 4 of 5</div>
+          <div class="sec-title">Input & Output (cin / cout)</div>
+          <div class="sec-duration">⏱ ~25 minutes</div>
+        </div>
+      </div>
+
+      <p class="body-text">So far our programs only display fixed values. Real programs need to <strong>interact with users</strong> — asking for input and giving output based on that input. In C++, we use <strong>cout</strong> for output and <strong>cin</strong> for input.</p>
+
+      <div class="concept-grid">
+        <div class="concept-card" style="border-color:rgba(58,249,195,0.3);">
+          <div class="cc-icon">📤</div>
+          <div class="cc-title" style="color:var(--accent2)">cout — Output</div>
+          <div class="cc-desc">Sends data TO the screen. Uses the <strong>&lt;&lt;</strong> (insertion) operator. Think: "see out" = output.</div>
+        </div>
+        <div class="concept-card" style="border-color:rgba(77,159,255,0.3);">
+          <div class="cc-icon">📥</div>
+          <div class="cc-title" style="color:var(--blue)">cin — Input</div>
+          <div class="cc-desc">Reads data FROM the keyboard. Uses the <strong>&gt;&gt;</strong> (extraction) operator. Think: "see in" = input.</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-top"><div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div><span class="code-filename">cement_cost.cpp — Civil Eng Example</span><button class="copy-btn" onclick="copyCode(this,'io-code')">Copy</button></div>
+        <pre id="io-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std<span class="op">;</span>
+
+<span class="kw">int</span> <span class="fn">main</span><span class="op">()</span> <span class="op">{</span>
+    <span class="kw">int</span>    numBags<span class="op">;</span>
+    <span class="kw">double</span> pricePerBag<span class="op">,</span> totalCost<span class="op">;</span>
+
+    <span class="cm">// Ask user for input</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Enter number of cement bags: "</span><span class="op">;</span>
+    cin  <span class="op">&gt;&gt;</span> numBags<span class="op">;</span>
+
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Enter price per bag (PHP): "</span><span class="op">;</span>
+    cin  <span class="op">&gt;&gt;</span> pricePerBag<span class="op">;</span>
+
+    <span class="cm">// Calculate and display result</span>
+    totalCost <span class="op">=</span> numBags <span class="op">*</span> pricePerBag<span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Total Cost: PHP "</span> <span class="op">&lt;&lt;</span> totalCost <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+
+    <span class="kw">return</span> <span class="num">0</span><span class="op">;</span>
+<span class="op">}</span></pre>
+      </div>
+
+      <div class="callout danger">
+        <div class="callout-icon">🔴</div>
+        <div class="callout-body"><strong>Common Mistake:</strong> Using <code class="mono">&lt;&lt;</code> with cin (it's <code class="mono">&gt;&gt;</code>) or <code class="mono">&gt;&gt;</code> with cout (it's <code class="mono">&lt;&lt;</code>). Always: <code class="mono">cout &lt;&lt; ...</code> and <code class="mono">cin &gt;&gt; ...</code></div>
+      </div>
+
+      <div class="tryit">
+        <div class="tryit-header">
+          <div class="tryit-icon">✏️</div>
+          <div class="tryit-title">Exercise 3.1 — Personal Info Collector</div>
+          <div class="tryit-badge">Try It!</div>
+        </div>
+        <div class="tryit-task">Write a program that asks the user for their <strong>name</strong> and <strong>year level</strong>, then prints a formatted greeting. Use <code style="color:var(--blue)">cin</code> for input and <code style="color:var(--accent2)">cout</code> for output.</div>
+        <div class="expected-label">Expected Output:</div>
+        <div class="expected-output">Enter your name: Juan
+Enter your year level: 2
+Hello, Juan! You are a Year 2 Civil Engineering student.</div>
+      </div>
+
+      <div class="kcheck" id="kc-2">
+        <div class="kcheck-title">🧠 Knowledge Check</div>
+        <div class="kcheck-q">Which statement correctly reads an integer from the keyboard into variable x?</div>
+        <div class="kcheck-opts">
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-2',false)"><span class="kcheck-letter">A</span>cout &lt;&lt; x;</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-2',false)"><span class="kcheck-letter">B</span>cin &lt;&lt; x;</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-2',true)"><span class="kcheck-letter">C</span>cin &gt;&gt; x;</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-2',false)"><span class="kcheck-letter">D</span>cout &gt;&gt; x;</div>
+        </div>
+        <div class="kcheck-fb" id="kc-2-fb"></div>
+      </div>
+
+      <div class="sec-complete show" id="done-3">
+        <div class="sec-complete-check">✅</div>
+        <div class="sec-complete-text"><strong>Section 4 Done!</strong>One more section — Operators!</div>
+        <button class="mark-done-btn" onclick="markDone(3)">Mark Complete</button>
+      </div>
+    </div>
+
+    <!-- ═══ SECTION 4: OPERATORS ═══ -->
+    <div class="lesson-section" id="sec-4">
+      <div class="sec-header">
+        <div class="sec-number">05</div>
+        <div class="sec-meta">
+          <div class="sec-tag">Section 5 of 5</div>
+          <div class="sec-title">Operators & Expressions</div>
+          <div class="sec-duration">⏱ ~25 minutes</div>
+        </div>
+      </div>
+
+      <p class="body-text"><strong>Operators</strong> are symbols that perform operations on variables and values. In C++, there are four main types you must know for Week 1.</p>
+
+      <table class="data-table">
+        <tr><th>Type</th><th>Operators</th><th>Description</th><th>Example</th></tr>
+        <tr><td><strong>Arithmetic</strong></td><td class="mono">+ - * / %</td><td>Math operations</td><td class="mono">area = l * w;</td></tr>
+        <tr><td><strong>Relational</strong></td><td class="mono">== != &lt; &gt; &lt;= &gt;=</td><td>Compare two values → true/false</td><td class="mono">score >= 75</td></tr>
+        <tr><td><strong>Logical</strong></td><td class="mono">&amp;&amp; || !</td><td>Combine conditions</td><td class="mono">x>0 &amp;&amp; y>0</td></tr>
+        <tr><td><strong>Assignment</strong></td><td class="mono">= += -= *= /=</td><td>Store values in variables</td><td class="mono">total += price;</td></tr>
+      </table>
+
+      <div class="callout info" style="margin-top:4px;">
+        <div class="callout-icon">🔢</div>
+        <div class="callout-body"><strong>Integer Division Warning:</strong> In C++, <code class="mono">7 / 2</code> gives <strong>3</strong>, not 3.5 — because both values are <code class="mono">int</code>. The remainder is discarded. To get 3.5, at least one value must be a <code class="mono">double</code>: <code class="mono">7.0 / 2</code> = 3.5</div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-top"><div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div><span class="code-filename">area_calculator.cpp — Civil Eng Example</span><button class="copy-btn" onclick="copyCode(this,'op-code')">Copy</button></div>
+        <pre id="op-code"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std<span class="op">;</span>
+
+<span class="kw">int</span> <span class="fn">main</span><span class="op">()</span> <span class="op">{</span>
+    <span class="kw">double</span> length<span class="op">,</span> width<span class="op">,</span> area<span class="op">;</span>
+
+    cout <span class="op">&lt;&lt;</span> <span class="str">"=== Room Area Calculator ==="</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Enter length (m): "</span><span class="op">;</span>
+    cin  <span class="op">&gt;&gt;</span> length<span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Enter width  (m): "</span><span class="op">;</span>
+    cin  <span class="op">&gt;&gt;</span> width<span class="op">;</span>
+
+    area <span class="op">=</span> length <span class="op">*</span> width<span class="op">;</span>   <span class="cm">// arithmetic operator *</span>
+
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Floor Area: "</span> <span class="op">&lt;&lt;</span> area <span class="op">&lt;&lt;</span> <span class="str">" sq. meters"</span> <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+
+    <span class="cm">// Relational operator: is area large enough?</span>
+    <span class="kw">bool</span> isLarge <span class="op">=</span> area <span class="op">&gt;=</span> <span class="num">20.0</span><span class="op">;</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Area >= 20 sqm: "</span> <span class="op">&lt;&lt;</span> isLarge <span class="op">&lt;&lt;</span> endl<span class="op">;</span>
+
+    <span class="kw">return</span> <span class="num">0</span><span class="op">;</span>
+<span class="op">}</span></pre>
+      </div>
+
+      <div class="tryit">
+        <div class="tryit-header">
+          <div class="tryit-icon">✏️</div>
+          <div class="tryit-title">Exercise 4.1 — Final Challenge: Cost Estimator</div>
+          <div class="tryit-badge">Final Exercise</div>
+        </div>
+        <div class="tryit-task">Write a complete C++ program that:<br><br>
+          1. Asks the user for the <strong>number of cement bags</strong> and <strong>price per bag</strong><br>
+          2. Computes the <strong>total cost</strong><br>
+          3. Applies a <strong>5% discount</strong> (totalCost = totalCost * 0.95)<br>
+          4. Displays the final cost with label "Final Cost: PHP ..."
+        </div>
+        <div class="expected-label">Expected Output (with 10 bags at ₱280):</div>
+        <div class="expected-output">Enter number of bags: 10
+Enter price per bag: 280
+Total Cost: PHP 2800
+After 5% discount: PHP 2660</div>
+      </div>
+
+      <div class="kcheck" id="kc-3">
+        <div class="kcheck-title">🧠 Knowledge Check</div>
+        <div class="kcheck-q">What does total += price; mean in C++?</div>
+        <div class="kcheck-opts">
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-3',false)"><span class="kcheck-letter">A</span>Subtracts price from total</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-3',false)"><span class="kcheck-letter">B</span>Checks if total equals price</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-3',true)"><span class="kcheck-letter">C</span>Adds price to total and stores in total</div>
+          <div class="kcheck-opt" onclick="checkKnowledge(this,'kc-3',false)"><span class="kcheck-letter">D</span>Declares a new variable called total</div>
+        </div>
+        <div class="kcheck-fb" id="kc-3-fb"></div>
+      </div>
+
+      <div class="sec-complete show" id="done-4">
+        <div class="sec-complete-check">🎉</div>
+        <div class="sec-complete-text"><strong>Lesson Complete!</strong>You've finished all 5 sections. Ready for the quiz?</div>
+        <button class="mark-done-btn" onclick="markDone(4)">Mark Complete</button>
+      </div>
+
+      <!-- FOOTER NAV -->
+      <div class="lesson-footer">
+        <div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;">
+          <a class="foot-btn" href="quiz.html">Take the Quiz → 📝</a>
+          <a class="foot-btn primary" href="practical.html" style="background:linear-gradient(135deg,#7b2fff,#00fff7);color:#fff;border-color:#7b2fff;">💻 Practical Assessment →</a>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ── STUDENT SAVE ──
+function saveStudent(){
+  const n=document.getElementById('stu-name').value.trim();
+  const s=document.getElementById('stu-section').value.trim();
+  if(!n){alert('Please enter your name first.');return;}
+  localStorage.setItem('stu_name',n);
+  localStorage.setItem('stu_section',s);
+  document.getElementById('reg-status').classList.add('show');
+  setTimeout(()=>document.getElementById('reg-status').classList.remove('show'),3000);
+}
+window.addEventListener('load',()=>{
+  const n=localStorage.getItem('stu_name');
+  const s=localStorage.getItem('stu_section');
+  if(n) document.getElementById('stu-name').value=n;
+  if(s) document.getElementById('stu-section').value=s;
+});
+
+// ── TIMER ──
+let startTime=Date.now();
+setInterval(()=>{
+  const e=Math.floor((Date.now()-startTime)/1000);
+  const m=Math.floor(e/60), sc=e%60;
+  document.getElementById('pt-time').textContent='⏱ '+String(m).padStart(2,'0')+':'+String(sc).padStart(2,'0');
+  localStorage.setItem('lesson_time',e);
+},1000);
+
+// ── PROGRESS ──
+let doneCount=0;
+function markDone(i){
+  const btn=document.getElementById('done-'+i);
+  btn.innerHTML='<div class="sec-complete-check">✅</div><div class="sec-complete-text"><strong>Completed!</strong>Great work.</div>';
+  document.getElementById('sb-'+i).classList.add('done');
+  doneCount=Math.max(doneCount,i+1);
+  const pct=Math.min(100,Math.round(doneCount/5*100));
+  document.getElementById('pt-fill').style.width=pct+'%';
+  document.getElementById('pt-pct').textContent=pct+'%';
+  localStorage.setItem('lesson_progress',pct);
+}
+
+// ── INTERSECTION OBSERVER ──
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.classList.add('visible');
+      const id=e.target.id;
+      const idx={'sec-0':0,'sec-1':1,'sec-2':2,'sec-3':3,'sec-4':4}[id];
+      if(idx!==undefined){
+        document.querySelectorAll('.sb-item').forEach(s=>s.classList.remove('active'));
+        const sb=document.getElementById('sb-'+idx);
+        if(sb) sb.classList.add('active');
+      }
+    }
+  });
+},{threshold:0.15});
+document.querySelectorAll('.lesson-section').forEach(s=>obs.observe(s));
+
+// ── 2D / 3D AUTOCAD VIEW TOGGLE ──
+function setACBView(mode, btn){
+  document.getElementById('acb-view-2d').style.display = mode==='2d' ? 'flex' : 'none';
+  document.getElementById('acb-view-3d').style.display = mode==='3d' ? 'flex' : 'none';
+  document.querySelectorAll('.acb-tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+// Init: make acb-screens flex columns
+document.addEventListener('DOMContentLoaded',()=>{
+  const v2=document.getElementById('acb-view-2d');
+  const v3=document.getElementById('acb-view-3d');
+  if(v2){v2.style.display='flex';v2.style.flexDirection='column';}
+  if(v3){v3.style.flexDirection='column';}
+});
+
+function jumpTo(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  // Highlight active quick link button
+  document.querySelectorAll('.ql-btn').forEach(b => b.classList.remove('ql-active'));
+  document.querySelectorAll('.ql-btn[onclick]').forEach(b => {
+    if(b.getAttribute('onclick') && b.getAttribute('onclick').includes("'"+id+"'"))
+      b.classList.add('ql-active');
+  });
+
+  // Calculate total sticky offset
+  const stickyEls = ['.nav', '.quick-links-bar'];
+  let offset = stickyEls.reduce((acc, sel) => {
+    const el2 = document.querySelector(sel);
+    return acc + (el2 ? el2.offsetHeight : 0);
+  }, 0);
+  offset += 20;
+
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  window.scrollTo({ top, behavior: 'smooth' });
+}
+
+// ── COPY CODE ──
+function copyCode(btn,id){
+  const el=document.getElementById(id);
+  const text=el.innerText||el.textContent;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+
+// ── DEMO WALKTHROUGH ──
+const demoSteps=[
+  {
+    highlight:0,
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'This is the full Hello World program. We will walk through it line by line. Click "Next Step" to begin.'
+  },
+  {
+    code:`<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;"><span class="cm">// My first C++ program</span></span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'<strong>Comments</strong> start with //. They are ignored by the compiler — they are notes for programmers to explain what the code does. Always comment your code!'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;"><span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span></span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'<strong>#include &lt;iostream&gt;</strong> is a preprocessor directive. It tells the compiler to include the iostream library, which gives us access to cout and cin for input/output.'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;"><span class="kw">using namespace</span> std;</span>
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'<strong>using namespace std;</strong> lets us write cout and cin directly instead of std::cout and std::cin every time. Think of it as a shortcut.'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;"><span class="kw">int</span> <span class="fn">main</span>() {</span>
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'<strong>int main()</strong> declares the main function. Every C++ program MUST have exactly one main() function. This is where execution begins. The { starts the function body.'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;">    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;</span>
+    <span class="kw">return</span> <span class="num">0</span>;
+}`,
+    explain:'<strong>cout &lt;&lt; "Hello, World!" &lt;&lt; endl;</strong> — cout sends text to the screen. The << operator "inserts" the text. endl moves the cursor to the next line. The semicolon ; ends the statement.'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+<span style="background:rgba(249,195,58,0.15);display:block;padding:2px 4px;border-radius:3px;">    <span class="kw">return</span> <span class="num">0</span>;</span>
+}`,
+    explain:'<strong>return 0;</strong> signals to the operating system that the program ended successfully. A return value of 0 always means "no errors". Non-zero values indicate an error occurred.'
+  },
+  {
+    code:`<span class="cm">// My first C++ program</span>
+<span class="cm">// Author: Your Name</span>
+<span class="cm">// Date: Week 1</span>
+
+<span class="kw">#include</span> <span class="str">&lt;iostream&gt;</span>
+<span class="kw">using namespace</span> std;
+
+<span class="kw">int</span> <span class="fn">main</span>() {
+    cout <span class="op">&lt;&lt;</span> <span class="str">"Hello, World!"</span> <span class="op">&lt;&lt;</span> endl;
+    <span class="kw">return</span> <span class="num">0</span>;
+<span style="background:rgba(58,249,195,0.15);display:block;padding:2px 4px;border-radius:3px;">}  <span class="cm">// ← Closing brace ends main()</span></span>`,
+    explain:'✅ <strong>Walkthrough complete!</strong> The closing } ends the main() function body. Every { must have a matching }. Now try running the code yourself in the Live Editor above!'
+  }
+];
+let demoStep=-1;
+function buildDemoDots(){
+  const c=document.getElementById('demo-dots');
+  c.innerHTML='';
+  for(let i=0;i<demoSteps.length;i++){
+    const d=document.createElement('div');
+    d.className='demo-dot'+(i===demoStep?' active':'');
+    c.appendChild(d);
+  }
+}
+function demoNext(){
+  if(demoStep<demoSteps.length-1) demoStep++;
+  renderDemo();
+}
+function demoPrev(){
+  if(demoStep>0) demoStep--;
+  renderDemo();
+}
+function demoReset(){demoStep=-1;renderDemo();}
+function renderDemo(){
+  const s=demoSteps[Math.max(0,demoStep)];
+  document.getElementById('demo-code-display').innerHTML=demoStep<0?`<span style="color:var(--muted);font-size:0.82rem;">← Click "Next Step" to begin the walkthrough</span>`:s.code;
+  document.getElementById('demo-explain-text').innerHTML=demoStep<0?'Click "Next Step" to begin the walkthrough.':s.explain;
+  buildDemoDots();
+  document.getElementById('demo-next-btn').textContent=demoStep>=demoSteps.length-1?'✓ Done':'Next Step →';
+}
+renderDemo();
+
+// ── SYNTAX HIGHLIGHTER ──
+const HELLO=`#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`;
+
+const programs={
+  hello:HELLO,
+  custom:`#include <iostream>
+using namespace std;
+
+int main() {
+    // Write your own C++ code here!
+    cout << "My Custom Program" << endl;
+    return 0;
+}`
+};
+
+function setTab(t){
+  document.querySelectorAll('.live-tab').forEach((b,i)=>b.classList.toggle('active',(t==='hello'&&i===0)||(t==='custom'&&i===1)));
+  document.getElementById('live-code').value=programs[t];
+  const out=document.getElementById('live-output');
+  out.className='live-output idle';
+  out.textContent='Click "▶ Run Code" to see output here...';
+}
+
+function runCode(){
+  const code=document.getElementById('live-code').value;
+  const out=document.getElementById('live-output');
+  const btn=document.getElementById('run-btn');
+  const status=document.getElementById('run-status');
+  btn.disabled=true;
+  btn.textContent='⏳ Running...';
+  status.textContent='Compiling...';
+  setTimeout(()=>{
+    try{
+      const result=simulateCpp(code);
+      if(result.error){
+        out.className='live-output error';
+        out.textContent='⛔ Compilation Error:\n'+result.error;
+        status.textContent='❌ Error';
+      } else {
+        out.className='live-output';
+        out.textContent=result.output||'(no output)';
+        status.textContent='✅ Ran successfully';
+      }
+    } catch(e){
+      out.className='live-output error';
+      out.textContent='Runtime Error: '+e.message;
+      status.textContent='❌ Error';
+    }
+    btn.disabled=false;
+    btn.innerHTML='▶ Run Code';
+    setTimeout(()=>status.textContent='',4000);
+  },700);
+}
+
+function simulateCpp(code){
+  if(!code.includes('main()')||!code.includes('{')){
+    return{error:'Missing main() function or braces.'};
+  }
+  if(!code.includes('#include')){
+    return{error:'Missing #include directive. Add: #include <iostream>'};
+  }
+  const lines=[];
+  const varMap={};
+  const intReg=/int\s+(\w+)\s*=\s*(-?\d+)\s*;/g;
+  const dblReg=/double\s+(\w+)\s*=\s*(-?[\d.]+)\s*;/g;
+  const strReg=/string\s+(\w+)\s*=\s*"([^"]*)"\s*;/g;
+  const boolReg=/bool\s+(\w+)\s*=\s*(true|false|1|0)\s*;/g;
+  let m;
+  while((m=intReg.exec(code))!==null) varMap[m[1]]=parseInt(m[2]);
+  while((m=dblReg.exec(code))!==null) varMap[m[1]]=parseFloat(m[2]);
+  while((m=strReg.exec(code))!==null) varMap[m[1]]=m[2];
+  while((m=boolReg.exec(code))!==null) varMap[m[1]]=(m[2]==='true'||m[2]==='1')?1:0;
+  const arithReg=/(\w+)\s*=\s*(\w+)\s*([*+\-/])\s*(\w+)\s*;/g;
+  while((m=arithReg.exec(code))!==null){
+    const a=varMap[m[2]]!==undefined?varMap[m[2]]:parseFloat(m[2]);
+    const b=varMap[m[4]]!==undefined?varMap[m[4]]:parseFloat(m[4]);
+    if(!isNaN(a)&&!isNaN(b)){
+      if(m[3]==='*') varMap[m[1]]=a*b;
+      else if(m[3]==='+') varMap[m[1]]=a+b;
+      else if(m[3]==='-') varMap[m[1]]=a-b;
+      else if(m[3]==='/') varMap[m[1]]=a/b;
+    }
+  }
+  const coutRegex=/cout\s*<<\s*((?:"[^"]*"|[^;<]+)(?:\s*<<\s*(?:"[^"]*"|[^;<]+))*)\s*;/g;
+  let match;
+  while((match=coutRegex.exec(code))!==null){
+    let parts=match[1].split('<<').map(p=>p.trim());
+    let line='';let newline=false;
+    for(let p of parts){
+      if(p==='endl'||p==='"\\n"'){newline=true;continue;}
+      if(p.startsWith('"')&&p.endsWith('"')) line+=p.slice(1,-1).replace(/\\n/g,'\n').replace(/\\t/g,'\t');
+      else if(varMap[p]!==undefined) line+=varMap[p];
+      else if(!isNaN(p)) line+=p;
+      else line+=p;
+    }
+    lines.push(line+(newline?'':'\n'));
+  }
+  if(lines.length===0&&!code.includes('cout')){
+    return{output:'(Program ran with no output)\nHint: Use cout << "..." << endl; to print text.'};
+  }
+  return{output:lines.join('')};
+}
+
+function resetCode(){
+  document.getElementById('live-code').value=HELLO;
+  const out=document.getElementById('live-output');
+  out.className='live-output idle';
+  out.textContent='Click "▶ Run Code" to see output here...';
+}
+
+// ── CONCEPT CARD MODALS ──
+const modalData = {
+  structural:{
+    icon:'🏗️', title:'Structural Analysis', sub:'C++ in Civil Engineering',
+    desc:`C++ can automate repetitive structural calculations — like computing beam deflection, checking load limits, or calculating stress on columns. Instead of doing it manually every time, a C++ program can do it in milliseconds. This is exactly how software like <strong>SAP2000</strong> works internally.`,
+    code:`#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    double load, length, EI;
+    cout &lt;&lt; "=== Beam Deflection Calculator ===" &lt;&lt; endl;
+    cout &lt;&lt; "Enter load (kN): ";
+    cin  &gt;&gt; load;
+    cout &lt;&lt; "Enter beam length (m): ";
+    cin  &gt;&gt; length;
+    cout &lt;&lt; "Enter EI value (kNm2): ";
+    cin  &gt;&gt; EI;
+
+    // Max deflection at midspan: δ = PL³ / 48EI
+    double deflection = (load * length*length*length) / (48 * EI);
+
+    cout &lt;&lt; "Max Deflection: " &lt;&lt; deflection &lt;&lt; " m" &lt;&lt; endl;
+    return 0;
+}`,
+    output:`=== Beam Deflection Calculator ===
+Enter load (kN): 50
+Enter beam length (m): 6
+Enter EI value (kNm2): 30000
+Max Deflection: 0.0225 m`
+  },
+  area:{
+    icon:'📐', title:'Area & Volume', sub:'C++ in Civil Engineering',
+    desc:`Area and volume calculations appear everywhere in civil engineering — floor areas, concrete volumes, excavation quantities, tank capacities. A C++ program can calculate all of these instantly given the dimensions, and even loop through multiple rooms or sections.`,
+    code:`#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    double length, width, height;
+    cout &lt;&lt; "=== Room Volume Calculator ===" &lt;&lt; endl;
+    cout &lt;&lt; "Enter length (m): ";
+    cin  &gt;&gt; length;
+    cout &lt;&lt; "Enter width (m): ";
+    cin  &gt;&gt; width;
+    cout &lt;&lt; "Enter height (m): ";
+    cin  &gt;&gt; height;
+
+    double floorArea = length * width;
+    double volume    = length * width * height;
+
+    cout &lt;&lt; "Floor Area: " &lt;&lt; floorArea &lt;&lt; " sq.m" &lt;&lt; endl;
+    cout &lt;&lt; "Room Volume: " &lt;&lt; volume   &lt;&lt; " cu.m" &lt;&lt; endl;
+    return 0;
+}`,
+    output:`=== Room Volume Calculator ===
+Enter length (m): 8
+Enter width (m): 5
+Enter height (m): 3
+Floor Area: 40 sq.m
+Room Volume: 120 cu.m`
+  },
+  cost:{
+    icon:'💰', title:'Cost Estimation', sub:'C++ in Civil Engineering',
+    desc:`Cost estimation is one of the most practical uses of C++ for civil engineers. A program can take material quantities and unit prices, apply labor rates, and output a complete bill of materials automatically — saving hours of manual spreadsheet work.`,
+    code:`#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int    bags;
+    double cementPrice, sandCubic, sandPrice, total;
+
+    cout &lt;&lt; "=== Material Cost Estimator ===" &lt;&lt; endl;
+
+    cout &lt;&lt; "Cement bags: ";
+    cin  &gt;&gt; bags;
+    cout &lt;&lt; "Price per bag (PHP): ";
+    cin  &gt;&gt; cementPrice;
+
+    cout &lt;&lt; "Sand (cubic meters): ";
+    cin  &gt;&gt; sandCubic;
+    cout &lt;&lt; "Price per cu.m (PHP): ";
+    cin  &gt;&gt; sandPrice;
+
+    total = (bags * cementPrice) + (sandCubic * sandPrice);
+
+    cout &lt;&lt; "Total Material Cost: PHP " &lt;&lt; total &lt;&lt; endl;
+    return 0;
+}`,
+    output:`=== Material Cost Estimator ===
+Cement bags: 20
+Price per bag (PHP): 280
+Sand (cubic meters): 3
+Price per cu.m (PHP): 1200
+Total Material Cost: PHP 9200`
+  },
+  data:{
+    icon:'📊', title:'Data Processing', sub:'C++ in Civil Engineering',
+    desc:`Civil engineers collect large amounts of field data — soil test results, load readings, survey measurements. C++ arrays allow you to store multiple values and compute statistics like average, maximum, and minimum instantly across all data points.`,
+    code:`#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    int n = 5;
+    double readings[5], sum = 0, maxVal, minVal;
+
+    cout &lt;&lt; "=== Soil Bearing Capacity Data ===" &lt;&lt; endl;
+    for(int i = 0; i &lt; n; i++) {
+        cout &lt;&lt; "Reading " &lt;&lt; i+1 &lt;&lt; " (kPa): ";
+        cin  &gt;&gt; readings[i];
+        sum += readings[i];
+    }
+
+    maxVal = minVal = readings[0];
+    for(int i = 1; i &lt; n; i++) {
+        if(readings[i] &gt; maxVal) maxVal = readings[i];
+        if(readings[i] &lt; minVal) minVal = readings[i];
+    }
+
+    cout &lt;&lt; "Average: " &lt;&lt; sum/n  &lt;&lt; " kPa" &lt;&lt; endl;
+    cout &lt;&lt; "Maximum: " &lt;&lt; maxVal &lt;&lt; " kPa" &lt;&lt; endl;
+    cout &lt;&lt; "Minimum: " &lt;&lt; minVal &lt;&lt; " kPa" &lt;&lt; endl;
+    return 0;
+}`,
+    output:`=== Soil Bearing Capacity Data ===
+Reading 1 (kPa): 142
+Reading 2 (kPa): 156
+Reading 3 (kPa): 138
+Reading 4 (kPa): 161
+Reading 5 (kPa): 149
+Average: 149.2 kPa
+Maximum: 161 kPa
+Minimum: 138 kPa`
+  },
+  autocad:{
+    icon:'🖥️', title:'AutoCAD & C++', sub:'How software is built with C++',
+    desc:`<strong>AutoCAD</strong> is the industry-standard CAD software used by civil, structural, and architectural engineers worldwide. It was originally written in C and later migrated to C++ — the same language you are learning right now.<br><br>C++ was chosen because it gives programmers <strong>direct control over memory and performance</strong>, which is critical when rendering complex 3D models, processing hundreds of thousands of coordinate points, and running real-time calculations.<br><br>Other engineering software built with C++: <strong>SAP2000</strong> (structural analysis), <strong>ETABS</strong> (building analysis), <strong>STAAD.Pro</strong> (structural design), and <strong>AutoCAD Civil 3D</strong> (road and site design).`,
+    autocad: true
+  }
+};
+
+function buildCodeBlock(code, output){
+  return `
+    <span class="modal-slabel">📋 Sample C++ Program</span>
+    <div class="code-wrap" style="margin-bottom:16px;">
+      <div class="code-top">
+        <div class="code-dots"><div class="cdot r"></div><div class="cdot y"></div><div class="cdot g"></div></div>
+        <span class="code-filename">example.cpp</span>
+      </div>
+      <pre style="font-family:'Fira Code',monospace;font-size:0.8rem;line-height:1.7;padding:16px 18px;overflow-x:auto;color:#e2f0ff;">${code}</pre>
+    </div>
+    <span class="modal-slabel">▶ Sample Output</span>
+    <div style="background:#040608;border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-family:'Fira Code',monospace;font-size:0.8rem;color:var(--accent2);line-height:1.7;white-space:pre;">${output}</div>`;
+}
+
+function buildAutoCAD(){
+  return `
+    <span class="modal-slabel">🏠 AutoCAD — Studio Type House Floor Plan</span>
+    <div class="autocad-wrap">
+      <div class="autocad-titlebar">
+        <div class="autocad-dots">
+          <div class="autocad-dot" style="background:#f85149"></div>
+          <div class="autocad-dot" style="background:#f0a84b"></div>
+          <div class="autocad-dot" style="background:#23d18b"></div>
+        </div>
+        <span class="autocad-name">AutoCAD Civil 3D — StudioHouse_FloorPlan.dwg</span>
+      </div>
+      <div class="autocad-main">
+        <div class="autocad-canvas">
+          <svg viewBox="0 0 260 200" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+            <!-- Grid -->
+            <defs>
+              <pattern id="grid-m" width="20" height="20" patternUnits="userSpaceOnUse">
+                <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#0e2236" stroke-width="0.4"/>
+              </pattern>
+            </defs>
+            <rect width="260" height="200" fill="url(#grid-m)"/>
+
+            <!-- OUTER WALLS -->
+            <rect x="20" y="15" width="200" height="160" fill="rgba(96,165,250,0.04)" stroke="#60a5fa" stroke-width="2.5"/>
+
+            <!-- INTERIOR PARTITIONS -->
+            <!-- Bathroom (top-right): 3m x 2.5m -->
+            <line x1="160" y1="15" x2="160" y2="70" stroke="#60a5fa" stroke-width="1.8"/>
+            <line x1="160" y1="70" x2="220" y2="70" stroke="#60a5fa" stroke-width="1.8"/>
+            <!-- Kitchenette (bottom-left): 3m x 2.5m -->
+            <line x1="20" y1="125" x2="100" y2="125" stroke="#60a5fa" stroke-width="1.8"/>
+            <line x1="100" y1="125" x2="100" y2="175" stroke="#60a5fa" stroke-width="1.8"/>
+
+            <!-- ROOM FILL COLORS (subtle) -->
+            <!-- Living/sleeping -->
+            <rect x="21" y="16" width="138" height="108" fill="rgba(59,130,246,0.03)"/>
+            <!-- Bathroom -->
+            <rect x="161" y="16" width="58" height="53" fill="rgba(34,211,164,0.03)"/>
+            <!-- Dining -->
+            <rect x="101" y="126" width="118" height="48" fill="rgba(249,195,58,0.03)"/>
+            <!-- Kitchen -->
+            <rect x="21" y="126" width="78" height="48" fill="rgba(249,58,122,0.03)"/>
+
+            <!-- ROOM LABELS -->
+            <text x="78" y="68" fill="#2a4a6a" font-size="8" text-anchor="middle" font-family="monospace" font-weight="bold">LIVING / SLEEPING</text>
+            <text x="78" y="78" fill="#2a4a6a" font-size="6.5" text-anchor="middle" font-family="monospace">AREA</text>
+            <text x="190" y="46" fill="#1a4a3a" font-size="7" text-anchor="middle" font-family="monospace" font-weight="bold">BATHROOM</text>
+            <text x="160" y="152" fill="#3a3a10" font-size="7" text-anchor="middle" font-family="monospace" font-weight="bold">DINING AREA</text>
+            <text x="58" y="152" fill="#4a1020" font-size="7" text-anchor="middle" font-family="monospace" font-weight="bold">KITCHENETTE</text>
+
+            <!-- MAIN DOOR (bottom wall) -->
+            <line x1="100" y1="175" x2="130" y2="175" stroke="#0a1828" stroke-width="4"/>
+            <path d="M100,175 Q100,148 130,175" fill="rgba(34,211,164,0.06)" stroke="#22d3a4" stroke-width="1.4"/>
+            <line x1="100" y1="148" x2="100" y2="175" stroke="#22d3a4" stroke-width="0.8" stroke-dasharray="3,2"/>
+
+            <!-- BATHROOM DOOR -->
+            <line x1="160" y1="50" x2="160" y2="70" stroke="#0a1828" stroke-width="4"/>
+            <path d="M160,50 Q140,50 160,70" fill="rgba(34,211,164,0.06)" stroke="#22d3a4" stroke-width="1.2"/>
+
+            <!-- KITCHEN DOOR -->
+            <line x1="100" y1="125" x2="100" y2="148" stroke="#0a1828" stroke-width="4"/>
+            <path d="M100,125 Q78,125 100,148" fill="rgba(34,211,164,0.06)" stroke="#22d3a4" stroke-width="1.2"/>
+
+            <!-- WINDOWS -->
+            <!-- Top wall — living area (3 windows) -->
+            <rect x="35" y="12" width="26" height="5" fill="#0a1828"/>
+            <line x1="35" y1="15" x2="61" y2="15" stroke="#f9c33a" stroke-width="3"/>
+            <line x1="42" y1="11" x2="42" y2="19" stroke="#f9c33a" stroke-width="1"/>
+            <line x1="54" y1="11" x2="54" y2="19" stroke="#f9c33a" stroke-width="1"/>
+
+            <rect x="78" y="12" width="26" height="5" fill="#0a1828"/>
+            <line x1="78" y1="15" x2="104" y2="15" stroke="#f9c33a" stroke-width="3"/>
+            <line x1="85" y1="11" x2="85" y2="19" stroke="#f9c33a" stroke-width="1"/>
+            <line x1="97" y1="11" x2="97" y2="19" stroke="#f9c33a" stroke-width="1"/>
+
+            <!-- Bathroom top window -->
+            <rect x="172" y="12" width="22" height="5" fill="#0a1828"/>
+            <line x1="172" y1="15" x2="194" y2="15" stroke="#f9c33a" stroke-width="3"/>
+            <line x1="179" y1="11" x2="179" y2="19" stroke="#f9c33a" stroke-width="1"/>
+            <line x1="187" y1="11" x2="187" y2="19" stroke="#f9c33a" stroke-width="1"/>
+
+            <!-- Right wall windows (dining) -->
+            <rect x="217" y="90" width="5" height="24" fill="#0a1828"/>
+            <line x1="220" y1="90" x2="220" y2="114" stroke="#f9c33a" stroke-width="3"/>
+            <line x1="216" y1="97" x2="224" y2="97" stroke="#f9c33a" stroke-width="1"/>
+            <line x1="216" y1="107" x2="224" y2="107" stroke="#f9c33a" stroke-width="1"/>
+
+            <!-- ── FURNITURE ── -->
+            <!-- BED (queen) -->
+            <rect x="26" y="22" width="55" height="78" rx="3" fill="rgba(96,165,250,0.1)" stroke="#3b6ea0" stroke-width="1.2"/>
+            <!-- Headboard -->
+            <rect x="26" y="22" width="55" height="13" rx="2" fill="rgba(96,165,250,0.2)" stroke="#3b6ea0" stroke-width="1"/>
+            <!-- Pillows -->
+            <rect x="29" y="24" width="22" height="9" rx="2" fill="rgba(96,165,250,0.28)" stroke="#3b6ea0" stroke-width="0.6"/>
+            <rect x="56" y="24" width="22" height="9" rx="2" fill="rgba(96,165,250,0.28)" stroke="#3b6ea0" stroke-width="0.6"/>
+            <!-- Center line -->
+            <line x1="53" y1="35" x2="53" y2="100" stroke="#1e3a58" stroke-width="0.7"/>
+            <!-- Side tables -->
+            <rect x="15" y="28" width="10" height="10" rx="1.5" fill="rgba(50,80,120,0.2)" stroke="#2a5070" stroke-width="0.7"/>
+            <rect x="82" y="28" width="10" height="10" rx="1.5" fill="rgba(50,80,120,0.2)" stroke="#2a5070" stroke-width="0.7"/>
+
+            <!-- SOFA (L-shape) -->
+            <rect x="96" y="22" width="56" height="22" rx="2.5" fill="rgba(77,120,180,0.12)" stroke="#2a5070" stroke-width="1.2"/>
+            <rect x="96" y="22" width="56" height="6" rx="1.5" fill="rgba(77,120,180,0.22)" stroke="#2a5070" stroke-width="0.6"/>
+            <rect x="96" y="22" width="6" height="22" rx="1" fill="rgba(77,120,180,0.22)" stroke="#2a5070" stroke-width="0.6"/>
+            <rect x="146" y="22" width="6" height="22" rx="1" fill="rgba(77,120,180,0.22)" stroke="#2a5070" stroke-width="0.6"/>
+            <!-- Coffee table -->
+            <rect x="106" y="52" width="32" height="20" rx="2" fill="rgba(30,60,90,0.5)" stroke="#2a5070" stroke-width="0.9"/>
+
+            <!-- TV UNIT (on wall) -->
+            <rect x="96" y="110" width="56" height="10" rx="1.5" fill="rgba(30,50,80,0.5)" stroke="#2a5070" stroke-width="0.8"/>
+            <rect x="108" y="104" width="32" height="9" rx="1" fill="rgba(14,165,233,0.08)" stroke="#1a4060" stroke-width="0.8"/>
+
+            <!-- BATHROOM FIXTURES -->
+            <!-- Shower -->
+            <rect x="164" y="18" width="30" height="28" rx="1.5" fill="rgba(34,211,164,0.05)" stroke="#1a5040" stroke-width="0.9" stroke-dasharray="2,1.5"/>
+            <circle cx="179" cy="32" r="5" fill="none" stroke="#1a5040" stroke-width="1"/>
+            <circle cx="179" cy="32" r="1.5" fill="#1a5040"/>
+            <!-- WC -->
+            <rect x="164" y="50" width="20" height="16" rx="3" fill="rgba(200,220,255,0.06)" stroke="#3a6080" stroke-width="0.9"/>
+            <ellipse cx="174" cy="62" rx="7" ry="4.5" fill="rgba(200,220,255,0.05)" stroke="#3a6080" stroke-width="0.6"/>
+            <!-- Sink -->
+            <rect x="196" y="50" width="18" height="16" rx="2.5" fill="rgba(200,220,255,0.06)" stroke="#3a6080" stroke-width="0.9"/>
+            <circle cx="205" cy="58" r="3" fill="none" stroke="#3a6080" stroke-width="0.7"/>
+
+            <!-- DINING TABLE + CHAIRS -->
+            <rect x="118" y="132" width="60" height="34" rx="2.5" fill="rgba(77,120,180,0.1)" stroke="#2a5070" stroke-width="1.2"/>
+            <!-- Chairs top -->
+            <rect x="122" y="126" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+            <rect x="140" y="126" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+            <rect x="158" y="126" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+            <!-- Chairs bottom -->
+            <rect x="122" y="164" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+            <rect x="140" y="164" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+            <rect x="158" y="164" width="14" height="8" rx="1.5" fill="rgba(77,120,180,0.18)" stroke="#2a5070" stroke-width="0.8"/>
+
+            <!-- KITCHEN COUNTER (L-shape) -->
+            <!-- Bottom counter -->
+            <rect x="22" y="162" width="74" height="10" rx="1.5" fill="rgba(77,120,180,0.14)" stroke="#2a5070" stroke-width="1"/>
+            <!-- Side counter -->
+            <rect x="22" y="128" width="10" height="44" rx="1.5" fill="rgba(77,120,180,0.14)" stroke="#2a5070" stroke-width="1"/>
+            <!-- Kitchen sink -->
+            <rect x="28" y="163" width="16" height="8" rx="1.5" fill="rgba(34,211,164,0.1)" stroke="#1a5040" stroke-width="0.8"/>
+            <circle cx="36" cy="167" r="2.5" fill="none" stroke="#1a5040" stroke-width="0.7"/>
+            <!-- Stove / cooktop -->
+            <rect x="50" y="163" width="18" height="8" rx="1" fill="rgba(255,100,50,0.1)" stroke="#5a3020" stroke-width="0.7"/>
+            <circle cx="54" cy="167" r="2" fill="none" stroke="#803020" stroke-width="0.7"/>
+            <circle cx="64" cy="167" r="2" fill="none" stroke="#803020" stroke-width="0.7"/>
+            <!-- Refrigerator -->
+            <rect x="22" y="128" width="18" height="22" rx="1.5" fill="rgba(96,165,250,0.08)" stroke="#2a5070" stroke-width="0.8"/>
+            <line x1="22" y1="139" x2="40" y2="139" stroke="#2a5070" stroke-width="0.6"/>
+
+            <!-- DIMENSION LINES -->
+            <line x1="20" y1="188" x2="220" y2="188" stroke="#1e4060" stroke-width="0.9"/>
+            <line x1="20" y1="184" x2="20" y2="192" stroke="#1e4060" stroke-width="0.9"/>
+            <line x1="220" y1="184" x2="220" y2="192" stroke="#1e4060" stroke-width="0.9"/>
+            <text x="120" y="196" fill="#1e4060" font-size="6" text-anchor="middle" font-family="monospace">13.33 m</text>
+            <line x1="236" y1="15" x2="236" y2="175" stroke="#1e4060" stroke-width="0.9"/>
+            <line x1="232" y1="15" x2="240" y2="15" stroke="#1e4060" stroke-width="0.9"/>
+            <line x1="232" y1="175" x2="240" y2="175" stroke="#1e4060" stroke-width="0.9"/>
+            <text x="252" y="99" fill="#1e4060" font-size="6" text-anchor="middle" font-family="monospace" transform="rotate(90,252,99)">10.67 m</text>
+
+            <!-- Cursor crosshair -->
+            <circle cx="160" cy="70" r="3.5" fill="#22d3a4" opacity="0.9"/>
+            <line x1="152" y1="70" x2="168" y2="70" stroke="#22d3a4" stroke-width="1.2"/>
+            <line x1="160" y1="62" x2="160" y2="78" stroke="#22d3a4" stroke-width="1.2"/>
+          </svg>
+        </div>
+        <div class="autocad-sidebar">
+          <div class="acs-row"><span class="acs-lbl">FILE</span><span class="acs-val">Studio_FP.dwg</span></div>
+          <div class="acs-row"><span class="acs-lbl">TYPE</span><span class="acs-val green">STUDIO</span></div>
+          <div class="acs-row"><span class="acs-lbl">TOTAL AREA</span><span class="acs-val yellow">142.2 m²</span></div>
+          <div class="acs-row"><span class="acs-lbl">LIVING</span><span class="acs-val">78.4 m²</span></div>
+          <div class="acs-row"><span class="acs-lbl">BATHROOM</span><span class="acs-val">18.6 m²</span></div>
+          <div class="acs-row"><span class="acs-lbl">KITCHEN</span><span class="acs-val">24.8 m²</span></div>
+          <div class="acs-row"><span class="acs-lbl">DINING</span><span class="acs-val">20.4 m²</span></div>
+          <div class="acs-row"><span class="acs-lbl">SCALE</span><span class="acs-val yellow">1:75</span></div>
+          <div class="acs-row"><span class="acs-lbl">LAYER</span><span class="acs-val">ARCH-PLAN</span></div>
+          <div class="acs-row"><span class="acs-lbl">OBJECTS</span><span class="acs-val">67 items</span></div>
+        </div>
+      </div>
+      <div class="autocad-cmd"><span>Command: </span>MEASUREGEOM  <span>│  Area: </span>142.22 m²  <span>│  Perimeter: </span>48.00 m</div>
+    </div>
+    <span class="modal-slabel">🏠 Studio Type House — Room Breakdown</span>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;">
+      <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:11px 14px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;">🛏️ Living / Sleeping</div>
+        <div style="font-size:0.92rem;font-weight:700;color:#60a5fa;">78.4 m²</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Open-plan, bed + sofa + TV</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:11px 14px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;">🚿 Bathroom</div>
+        <div style="font-size:0.92rem;font-weight:700;color:#22d3a4;">18.6 m²</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Shower, WC, sink</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:11px 14px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;">🍳 Kitchenette</div>
+        <div style="font-size:0.92rem;font-weight:700;color:#f9c33a;">24.8 m²</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Counter, stove, ref, sink</div>
+      </div>
+      <div style="background:var(--s2);border:1px solid var(--border);border-radius:9px;padding:11px 14px;">
+        <div style="font-size:0.7rem;color:var(--muted);margin-bottom:3px;letter-spacing:1px;text-transform:uppercase;">🍽️ Dining Area</div>
+        <div style="font-size:0.92rem;font-weight:700;color:#f472b6;">20.4 m²</div>
+        <div style="font-size:0.72rem;color:var(--muted);margin-top:2px;">Table for 6, open to kitchen</div>
+      </div>
+    </div>
+    <span class="modal-slabel">💡 Why C++ Powers AutoCAD</span>
+    <div style="background:var(--s2);border:1px solid var(--border);border-radius:10px;padding:14px 16px;font-size:0.84rem;color:#99b0c8;line-height:1.75;">
+      Every line, wall, and dimension you see in this floor plan is stored as <strong style="color:var(--text);">coordinate data (x, y values)</strong> — exactly like the variables you are learning in C++. AutoCAD uses C++ to process millions of these coordinates in real time so engineers can design buildings like this studio unit instantly.
+    </div>`;
+}
+
+function openModal(key){
+  const d = modalData[key];
+  if(!d) return;
+  document.getElementById('modal-icon').textContent = d.icon;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-sub').textContent = d.sub;
+  let html = `<p class="modal-desc">${d.desc}</p>`;
+  if(d.autocad) html += buildAutoCAD();
+  else html += buildCodeBlock(d.code, d.output);
+  document.getElementById('modal-content').innerHTML = html;
+  const overlay = document.getElementById('card-modal');
+  overlay.classList.add('open');
+  // Always scroll modal box to top, never scroll the page
+  const box = document.getElementById('modal-box');
+  if(box) box.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('card-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function closeModalOutside(e){
+  if(e.target.id === 'card-modal') closeModal();
+}
+
+// Close on ESC key
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+function checkKnowledge(el,id,isCorrect){
+  const container=document.getElementById(id);
+  if(container.dataset.answered) return;
+  container.dataset.answered='1';
+  document.querySelectorAll('#'+id+' .kcheck-opt').forEach(o=>o.style.pointerEvents='none');
+  el.classList.add(isCorrect?'correct':'wrong');
+  if(!isCorrect){
+    document.querySelectorAll('#'+id+' .kcheck-opt').forEach(o=>{
+      if(o.dataset.correct) o.classList.add('correct');
+    });
+  }
+  const msgs={
+    'kc-0':{ok:'✅ Correct! #include &lt;iostream&gt; includes the iostream library which provides cin and cout.',ng:'❌ The answer is B. #include &lt;iostream&gt; loads the input/output library.'},
+    'kc-1':{ok:'✅ Correct! double stores decimal values with 15 digits of precision — ideal for engineering measurements.',ng:'❌ The answer is C: double. It stores decimal numbers with 15 digits of precision — perfect for measurements.'},
+    'kc-2':{ok:'✅ Correct! cin >> x reads a value from the keyboard and stores it in variable x.',ng:'❌ The answer is C: cin >> x; — cin uses >> (extraction operator) to read from keyboard.'},
+    'kc-3':{ok:'✅ Correct! += is the compound assignment operator. total += price is shorthand for total = total + price.',ng:'❌ The answer is C. total += price is shorthand for total = total + price.'}
+  };
+  const fb=document.getElementById(id+'-fb');
+  fb.classList.add('show',isCorrect?'ok':'ng');
+  fb.innerHTML=isCorrect?msgs[id].ok:msgs[id].ng;
+}
+</script>
+</body>
+</html>
