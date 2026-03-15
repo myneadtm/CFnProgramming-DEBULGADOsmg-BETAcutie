@@ -892,16 +892,22 @@ function showResults(isAuto){
   submitToSheets(passed, pct, timeStr, isAuto || false);
 
   // ── LOCK: save record so this student can't retake ──
-  const key = 'practical_done_' + (stuNo||'unknown').toLowerCase().replace(/\s/g,'');
   const record = {
     studentNo: stuNo || 'N/A',
     name: stuName,
     section: stuSection,
+    score: passed + '/2',
     percent: pct + '%',
     timeTaken: timeStr,
     timestamp: new Date().toLocaleString('en-PH',{timeZone:'Asia/Manila'})
   };
-  localStorage.setItem(key, JSON.stringify(record));
+  // Save under both old key (retake lock) and new keys (profile lookup)
+  const keyOld = 'practical_done_' + (stuNo||'unknown').toLowerCase().replace(/\s/g,'');
+  localStorage.setItem(keyOld, JSON.stringify(record));
+  if(stuNo) localStorage.setItem('prac_done_no_' + stuNo.toLowerCase().replace(/\s/g,''), JSON.stringify(record));
+  if(stuName) localStorage.setItem('prac_done_name_' + stuName.toLowerCase().replace(/\s/g,''), JSON.stringify(record));
+  // Also save student no for profile auto-fill
+  if(stuNo) localStorage.setItem('stu_no', stuNo);
 
   buildAnswerLog();
   window.scrollTo({top:0,behavior:'smooth'});
