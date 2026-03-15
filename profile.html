@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>My Dashboard — Computer Fundamentals and Programming</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#060b14;--s1:#0b1120;--s2:#101828;--s3:#1a2436;
+  --border:#1e2d42;--border2:#273648;
+  --accent:#f9c33a;--green:#3af9c3;--red:#f93a7a;
+  --purple:#a855f7;--cyan:#22d3ee;--blue:#3b82f6;
+  --text:#e2eeff;--muted:#5a7499;--dim:#3a4f6a;
+  --font:'Outfit',sans-serif;--mono:'Fira Code',monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{min-height:100dvh;}
+body{font-family:var(--font);background:var(--bg);color:var(--text);}
+body::before{content:'';position:fixed;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(59,130,246,0.025) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(59,130,246,0.025) 1px,transparent 1px);
+  background-size:48px 48px;pointer-events:none;}
+body::after{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 50% at 15% 0%,rgba(168,85,247,0.08),transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 100%,rgba(34,211,238,0.06),transparent 55%);}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(6,11,20,0.94);
+  backdrop-filter:blur(20px);border-bottom:1px solid var(--border);
+  padding:0 32px;display:flex;align-items:center;
+  justify-content:space-between;height:66px;}
+.nav-logo{display:flex;align-items:center;gap:10px;}
+.nav-logo-icon{width:34px;height:34px;background:var(--accent);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:0.75rem;font-weight:600;color:#000;flex-shrink:0;}
+.nav-title{font-weight:700;font-size:0.82rem;line-height:1.3;}
+.nav-sub{font-size:0.62rem;color:var(--muted);line-height:1.3;}
+.nav-instructor{font-size:0.62rem;color:var(--accent);font-weight:600;line-height:1.3;}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-link{padding:6px 14px;border-radius:7px;font-size:0.78rem;font-weight:600;
+  color:var(--muted);text-decoration:none;border:1px solid var(--border);
+  background:var(--s2);transition:all 0.2s;display:inline-flex;align-items:center;gap:5px;}
+.nav-link:hover{color:var(--text);}
+.nav-link.active{color:var(--purple);border-color:rgba(168,85,247,0.4);background:rgba(168,85,247,0.07);}
+.nav-link.home-link{border-color:var(--border);}
+.nav-link.practical-link{border-color:rgba(0,255,247,0.3);color:#00fff7;}
+.nav-divider{width:1px;height:18px;background:var(--border);margin:0 4px;}
+.nav-userbadge{display:none;align-items:center;gap:5px;font-size:0.72rem;
+  color:var(--green);cursor:pointer;padding:4px 10px;
+  border:1px solid rgba(58,249,195,0.25);border-radius:7px;background:rgba(58,249,195,0.05);}
+
+/* PAGE */
+.page{max-width:860px;margin:0 auto;padding:36px 24px 80px;position:relative;z-index:1;}
+
+/* LOADING */
+#state-loading{text-align:center;padding:80px 20px;}
+.ring{width:48px;height:48px;border:4px solid var(--border2);border-top-color:var(--purple);
+  border-radius:50%;animation:spin 0.85s linear infinite;margin:0 auto 14px;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* NO AUTH */
+#state-noauth{display:none;text-align:center;padding:80px 20px;}
+.na-icon{font-size:3.5rem;margin-bottom:14px;}
+.na-title{font-size:1.3rem;font-weight:800;margin-bottom:8px;}
+.na-sub{font-size:0.86rem;color:var(--muted);line-height:1.7;margin-bottom:24px;}
+.btn-go-login{background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:#fff;border:none;border-radius:12px;padding:13px 28px;
+  font-family:var(--font);font-weight:700;font-size:0.9rem;cursor:pointer;
+  box-shadow:0 4px 20px rgba(168,85,247,0.35);transition:all 0.2s;}
+.btn-go-login:hover{transform:translateY(-2px);}
+
+/* DASHBOARD */
+#state-dashboard{display:none;}
+
+/* Profile card */
+.profile-card{
+  background:var(--s1);border:1.5px solid var(--border2);
+  border-radius:20px;padding:28px;margin-bottom:24px;
+  display:flex;align-items:center;gap:20px;
+  position:relative;overflow:hidden;
+}
+.profile-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--purple),var(--cyan),var(--accent));}
+.p-avatar{width:72px;height:72px;border-radius:50%;flex-shrink:0;
+  border:3px solid rgba(168,85,247,0.4);box-shadow:0 0 24px rgba(168,85,247,0.2);}
+.p-avatar-ph{width:72px;height:72px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.8rem;font-weight:700;color:#fff;
+  border:3px solid rgba(168,85,247,0.4);}
+.p-info{flex:1;min-width:0;}
+.p-name{font-size:1.2rem;font-weight:800;margin-bottom:2px;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.p-email{font-size:0.78rem;color:var(--muted);margin-bottom:8px;}
+.p-tags{display:flex;gap:6px;flex-wrap:wrap;}
+.tag{font-size:0.62rem;font-weight:700;padding:3px 10px;border-radius:20px;}
+.tag-g{background:rgba(58,249,195,0.1);color:var(--green);border:1px solid rgba(58,249,195,0.2);}
+.tag-p{background:rgba(168,85,247,0.1);color:var(--purple);border:1px solid rgba(168,85,247,0.2);}
+.tag-m{background:rgba(90,116,153,0.12);color:var(--muted);border:1px solid var(--border);}
+.btn-out{background:transparent;color:var(--red);border:1px solid rgba(249,58,122,0.3);
+  border-radius:8px;padding:7px 14px;font-family:var(--font);font-weight:600;
+  font-size:0.75rem;cursor:pointer;transition:all 0.2s;flex-shrink:0;}
+.btn-out:hover{background:rgba(249,58,122,0.08);}
+
+/* Summary */
+.sum-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px;}
+.sum-box{
+  background:var(--s1);border:1.5px solid var(--border2);
+  border-radius:16px;padding:20px 16px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.sum-box::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.sum-box.sq::after{background:linear-gradient(90deg,var(--accent),#f0a84b);}
+.sum-box.sp::after{background:linear-gradient(90deg,var(--purple),var(--cyan));}
+.sum-box.sa::after{background:linear-gradient(90deg,var(--green),var(--blue));}
+.sb-icon{font-size:1.5rem;margin-bottom:8px;}
+.sb-val{font-size:1.8rem;font-weight:900;font-family:var(--mono);line-height:1;margin-bottom:4px;}
+.sb-label{font-size:0.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:1px;}
+.sb-sub{font-size:0.68rem;color:var(--dim);margin-top:3px;}
+
+/* Section heading */
+.sh{display:flex;align-items:center;gap:10px;margin:28px 0 14px;}
+.sh-line{flex:1;height:1px;background:var(--border);}
+.sh-text{font-size:0.65rem;font-weight:700;color:var(--muted);
+  letter-spacing:2px;text-transform:uppercase;white-space:nowrap;}
+
+/* Assessment card */
+.acard{background:var(--s1);border:1.5px solid var(--border2);
+  border-radius:16px;padding:22px 22px 18px;margin-bottom:14px;
+  position:relative;overflow:hidden;}
+.acard::before{content:'';position:absolute;top:0;left:0;bottom:0;width:4px;}
+.acard.aq::before{background:linear-gradient(180deg,var(--accent),#f0a84b);}
+.acard.ap::before{background:linear-gradient(180deg,var(--purple),var(--cyan));}
+.ac-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.ac-title{font-size:0.92rem;font-weight:800;}
+.ac-sub{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+.badge{padding:5px 14px;border-radius:20px;font-size:0.7rem;font-weight:800;flex-shrink:0;}
+.badge-ok{background:rgba(58,249,195,0.12);color:var(--green);border:1px solid rgba(58,249,195,0.25);}
+.badge-no{background:rgba(249,58,122,0.12);color:var(--red);border:1px solid rgba(249,58,122,0.25);}
+.ac-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.ac-cell{background:var(--s2);border-radius:10px;padding:10px 8px;text-align:center;}
+.ac-cv{font-size:0.98rem;font-weight:800;font-family:var(--mono);line-height:1.2;margin-bottom:2px;}
+.ac-cl{font-size:0.6rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;}
+.bar-wrap{margin-top:4px;}
+.bar-row{display:flex;justify-content:space-between;font-size:0.68rem;color:var(--muted);margin-bottom:4px;}
+.bar-track{background:var(--s3);border-radius:6px;height:8px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:6px;transition:width 1.2s cubic-bezier(.4,0,.2,1);}
+.ac-ts{margin-top:10px;font-size:0.7rem;color:var(--dim);}
+
+/* Not attempted */
+.notdone{background:var(--s1);border:1.5px dashed var(--border);
+  border-radius:16px;padding:24px;text-align:center;margin-bottom:14px;}
+.nd-icon{font-size:2rem;margin-bottom:8px;opacity:0.35;}
+.nd-title{font-size:0.88rem;font-weight:700;color:var(--muted);margin-bottom:4px;}
+.nd-sub{font-size:0.74rem;color:var(--dim);margin-bottom:14px;}
+.btn-take{display:inline-flex;align-items:center;gap:6px;
+  background:linear-gradient(135deg,var(--purple),var(--blue));
+  color:#fff;border:none;border-radius:9px;padding:9px 18px;
+  font-family:var(--font);font-weight:700;font-size:0.8rem;
+  cursor:pointer;text-decoration:none;transition:all 0.2s;}
+.btn-take:hover{transform:translateY(-1px);box-shadow:0 4px 14px rgba(168,85,247,0.35);}
+
+/* Activity log */
+.actcard{background:var(--s1);border:1.5px solid var(--border2);border-radius:16px;padding:22px 22px 10px;}
+.act-row{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);}
+.act-row:last-child{border-bottom:none;}
+.act-dot{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:1.1rem;flex-shrink:0;}
+.dot-q{background:rgba(249,195,58,0.1);}
+.dot-p{background:rgba(168,85,247,0.1);}
+.act-body{flex:1;min-width:0;}
+.act-t{font-size:0.82rem;font-weight:700;}
+.act-d{font-size:0.7rem;color:var(--muted);margin-top:1px;}
+.act-pct{font-size:0.82rem;font-weight:800;font-family:var(--mono);
+  padding:3px 10px;border-radius:8px;flex-shrink:0;}
+.ap-hi{color:var(--green);background:rgba(58,249,195,0.08);}
+.ap-mid{color:var(--accent);background:rgba(249,195,58,0.08);}
+.ap-lo{color:var(--red);background:rgba(249,58,122,0.08);}
+.act-empty{text-align:center;padding:24px 0 14px;font-size:0.82rem;color:var(--muted);}
+
+/* Mobile nav */
+@media(max-width:600px){
+  nav{height:auto;padding:10px 12px 0;flex-direction:column;align-items:stretch;}
+  .nav-logo{gap:8px;padding-bottom:8px;}
+  .nav-logo-icon{width:28px;height:28px;font-size:0.65rem;}
+  .nav-title{font-size:0.76rem;}
+  .nav-sub,.nav-instructor{font-size:0.58rem;}
+  .nav-links{flex-direction:row;gap:4px;border-top:1px solid var(--border);
+    padding:8px 0 9px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none;}
+  .nav-links::-webkit-scrollbar{display:none;}
+  .nav-link{padding:6px 10px;font-size:0.7rem;white-space:nowrap;flex-shrink:0;}
+  .nav-divider{display:none;}
+  .page{padding:20px 12px 80px;}
+  .profile-card{flex-wrap:wrap;gap:14px;padding:20px 16px;}
+  .sum-grid{gap:8px;}
+  .sb-val{font-size:1.4rem;}
+  .ac-grid{grid-template-columns:1fr 1fr;gap:8px;}
+  .acard{padding:16px 14px 12px;}
+  .ac-top{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-logo-icon">C++</div>
+    <div>
+      <div class="nav-title">Computer Fundamentals and Programming</div>
+      <div class="nav-sub">BS Civil Engineering</div>
+      <div class="nav-instructor">Instructor: DEBULGADO, S.M.G</div>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link home-link">🏠 Home</a>
+    <div class="nav-divider"></div>
+    <a href="lesson.html" class="nav-link">📘 Lesson</a>
+    <a href="quiz.html" class="nav-link">📝 Quiz</a>
+    <a href="practical.html" class="nav-link practical-link">💻 Practical</a>
+    <a href="profile.html" class="nav-link active">👤 Profile</a>
+    <div class="nav-divider"></div>
+    <span id="nav-userbadge" class="nav-userbadge"
+      onclick="window._signOut&&window._signOut()"
+      title="Click to sign out"></span>
+  </div>
+</nav>
+
+<div class="page">
+
+  <!-- LOADING -->
+  <div id="state-loading">
+    <div class="ring"></div>
+    <div style="font-size:0.86rem;color:var(--muted);">Loading your profile...</div>
+  </div>
+
+  <!-- NO AUTH -->
+  <div id="state-noauth">
+    <div class="na-icon">🔒</div>
+    <div class="na-title">Sign In Required</div>
+    <p class="na-sub">Sign in with your Gmail to view your personal dashboard and score history.</p>
+    <button class="btn-go-login" onclick="window.location.href='login.html'">🔑 Sign In with Gmail</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="state-dashboard">
+
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div id="av-wrap"></div>
+      <div class="p-info">
+        <div class="p-name" id="p-name">—</div>
+        <div class="p-email" id="p-email">—</div>
+        <div class="p-tags" id="p-tags"></div>
+      </div>
+      <button class="btn-out" onclick="window._signOut&&window._signOut()">⏻ Sign Out</button>
+    </div>
+
+    <!-- Summary -->
+    <div class="sum-grid">
+      <div class="sum-box sq">
+        <div class="sb-icon">📝</div>
+        <div class="sb-val" id="sv-quiz" style="color:var(--accent)">—</div>
+        <div class="sb-label">Theory Quiz</div>
+        <div class="sb-sub" id="ss-quiz">Not taken</div>
+      </div>
+      <div class="sum-box sp">
+        <div class="sb-icon">💻</div>
+        <div class="sb-val" id="sv-prac" style="color:var(--purple)">—</div>
+        <div class="sb-label">Practical</div>
+        <div class="sb-sub" id="ss-prac">Not taken</div>
+      </div>
+      <div class="sum-box sa">
+        <div class="sb-icon">🏆</div>
+        <div class="sb-val" id="sv-avg" style="color:var(--green)">—</div>
+        <div class="sb-label">Average</div>
+        <div class="sb-sub" id="ss-avg">Both needed</div>
+      </div>
+    </div>
+
+    <!-- Quiz -->
+    <div class="sh"><div class="sh-text">📝 Theory Quiz</div><div class="sh-line"></div></div>
+    <div id="sec-quiz"></div>
+
+    <!-- Practical -->
+    <div class="sh"><div class="sh-text">💻 Practical Assessment</div><div class="sh-line"></div></div>
+    <div id="sec-prac"></div>
+
+    <!-- Activity Log -->
+    <div class="sh"><div class="sh-text">🕐 Activity Log</div><div class="sh-line"></div></div>
+    <div class="actcard"><div id="act-log"><div class="act-empty">No activity yet.</div></div></div>
+
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp }  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, onAuthStateChanged, signOut }
+                          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc }
+                          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ══════════════════════════════════════════
+//  🔧 PASTE YOUR FIREBASE CONFIG HERE
+// ══════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "AIzaSyBPXF8GpjJhNCkNzkkz-kkGVH2cx3XXBjs",
+  authDomain:        "YOUR_PROJECT.firebaseapp.com",
+  projectId:         "YOUR_PROJECT_ID",
+  storageBucket:     "YOUR_PROJECT.appspot.com",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId:             "YOUR_APP_ID"
+};
+// ══════════════════════════════════════════
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const g = id => document.getElementById(id);
+
+onAuthStateChanged(auth, async user => {
+  g('state-loading').style.display = 'none';
+
+  if (!user) { g('state-noauth').style.display = 'block'; return; }
+
+  // Sign-out helper
+  window._signOut = async () => {
+    await signOut(auth);
+    localStorage.removeItem('firebase_user');
+    localStorage.removeItem('student_session');
+    window.location.href = 'login.html';
+  };
+
+  // Nav badge
+  const badge = g('nav-userbadge');
+  if (badge) {
+    badge.innerHTML = (user.photoURL
+      ? `<img src="${user.photoURL}" style="width:22px;height:22px;border-radius:50%;vertical-align:middle;margin-right:5px;border:1px solid rgba(58,249,195,0.4);">`
+      : '👤 ') + (user.displayName || user.email);
+    badge.style.display = 'inline-flex';
+  }
+
+  // Build profile header
+  const av = g('av-wrap');
+  av.innerHTML = user.photoURL
+    ? `<img class="p-avatar" src="${user.photoURL}" alt="">`
+    : `<div class="p-avatar-ph">${(user.displayName||user.email||'?')[0].toUpperCase()}</div>`;
+  g('p-name').textContent  = user.displayName || 'Student';
+  g('p-email').textContent = user.email;
+  g('p-tags').innerHTML =
+    `<span class="tag tag-g">✅ Verified Gmail</span>
+     <span class="tag tag-p">📚 Week 1</span>
+     <span class="tag tag-m">BS Civil Engineering</span>`;
+
+  // Fetch Firestore (with localStorage fallback)
+  const [qSnap, pSnap] = await Promise.all([
+    getDoc(doc(db, 'quiz_submissions',     user.uid)).catch(()=>null),
+    getDoc(doc(db, 'practical_submissions',user.uid)).catch(()=>null)
+  ]);
+
+  const fromLS = key => {
+    try { return JSON.parse(localStorage.getItem(key + user.uid)); } catch(e){ return null; }
+  };
+
+  const qd = qSnap?.exists() ? qSnap.data() : fromLS('quiz_done_uid_');
+  const pd = pSnap?.exists() ? pSnap.data() : fromLS('practical_done_uid_');
+
+  buildSummary(qd, pd);
+  buildQuiz(qd);
+  buildPrac(pd);
+  buildLog(qd, pd);
+
+  g('state-dashboard').style.display = 'block';
+});
+
+function pct(d){ return parseFloat((d?.percent||'0').replace('%','')); }
+
+function buildSummary(qd, pd) {
+  if (qd) { g('sv-quiz').textContent = qd.score||'—'; g('ss-quiz').textContent = qd.percent||'—'; }
+  if (pd) { g('sv-prac').textContent = pd.score||'—'; g('ss-prac').textContent = pd.percent||'—'; }
+  if (qd && pd) {
+    const avg = ((pct(qd)+pct(pd))/2).toFixed(1);
+    g('sv-avg').textContent = avg+'%';
+    g('ss-avg').textContent = avg>=50 ? '✅ Passed' : '❌ Below 50%';
+  }
+}
+
+function buildQuiz(qd) {
+  const wrap = g('sec-quiz');
+  if (!qd) {
+    wrap.innerHTML = `<div class="notdone">
+      <div class="nd-icon">📝</div>
+      <div class="nd-title">Theory Quiz Not Yet Taken</div>
+      <p class="nd-sub">Complete the 20-question quiz to see your score here.</p>
+      <a href="quiz.html" class="btn-take">📝 Take the Quiz →</a>
+    </div>`; return;
+  }
+  const p = pct(qd);
+  const pass = p >= 50;
+  const bar = p>=75?'linear-gradient(90deg,#3af9c3,#22d3ee)':p>=50?'linear-gradient(90deg,#f9c33a,#f0a84b)':'linear-gradient(90deg,#f93a7a,#a855f7)';
+  const cv = c => p>=75?'var(--green)':p>=50?'var(--accent)':'var(--red)';
+  wrap.innerHTML = `<div class="acard aq">
+    <div class="ac-top">
+      <div><div class="ac-title">📝 Theory Quiz — Week 1</div><div class="ac-sub">20 Questions · 3 min each · Auto-graded</div></div>
+      <div class="badge ${pass?'badge-ok':'badge-no'}">${pass?'✅ PASSED':'❌ FAILED'}</div>
+    </div>
+    <div class="ac-grid">
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--accent)">${qd.score||'—'}</div><div class="ac-cl">Score</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:${cv()}">${qd.percent||'—'}</div><div class="ac-cl">Percentage</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--muted)">${qd.wrong||'—'}</div><div class="ac-cl">Wrong</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--dim);font-size:0.7rem">${qd.studentNo||'N/A'}</div><div class="ac-cl">Student No.</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-row"><span>Score Progress</span><span>${qd.percent||'0%'}</span></div>
+      <div class="bar-track"><div class="bar-fill" id="qbar" style="width:0%;background:${bar}"></div></div>
+    </div>
+    <div class="ac-ts">📅 Submitted: ${qd.timestamp||'—'} &nbsp;|&nbsp; 📧 ${qd.gmail||'—'}</div>
+  </div>`;
+  setTimeout(()=>{ const el=g('qbar'); if(el) el.style.width=Math.min(p,100)+'%'; }, 400);
+}
+
+function buildPrac(pd) {
+  const wrap = g('sec-prac');
+  if (!pd) {
+    wrap.innerHTML = `<div class="notdone">
+      <div class="nd-icon">💻</div>
+      <div class="nd-title">Practical Assessment Not Yet Taken</div>
+      <p class="nd-sub">Complete the 2 coding tasks to see your score here.</p>
+      <a href="practical.html" class="btn-take">💻 Take Practical →</a>
+    </div>`; return;
+  }
+  const p = pct(pd);
+  const pass = p >= 50;
+  const bar = p>=75?'linear-gradient(90deg,#a855f7,#22d3ee)':p>=50?'linear-gradient(90deg,#a855f7,#3b82f6)':'linear-gradient(90deg,#f93a7a,#a855f7)';
+  const cv = () => p>=75?'var(--green)':p>=50?'var(--accent)':'var(--red)';
+  wrap.innerHTML = `<div class="acard ap">
+    <div class="ac-top">
+      <div><div class="ac-title">💻 Practical Assessment — Week 1</div><div class="ac-sub">2 Coding Tasks · 50 pts each · C++</div></div>
+      <div class="badge ${pass?'badge-ok':'badge-no'}">${pass?'✅ PASSED':'❌ FAILED'}</div>
+    </div>
+    <div class="ac-grid">
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--purple)">${pd.score||'—'}</div><div class="ac-cl">Tasks Passed</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:${cv()}">${pd.percent||'—'}</div><div class="ac-cl">Percentage</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--cyan)">${pd.timeTaken||'—'}</div><div class="ac-cl">Time Taken</div></div>
+      <div class="ac-cell"><div class="ac-cv" style="color:var(--dim);font-size:0.7rem">${pd.studentNo||'N/A'}</div><div class="ac-cl">Student No.</div></div>
+    </div>
+    <div class="bar-wrap">
+      <div class="bar-row"><span>Score Progress</span><span>${pd.percent||'0%'}</span></div>
+      <div class="bar-track"><div class="bar-fill" id="pbar" style="width:0%;background:${bar}"></div></div>
+    </div>
+    <div class="ac-ts">📅 Submitted: ${pd.timestamp||'—'} &nbsp;|&nbsp; 📧 ${pd.gmail||'—'}</div>
+  </div>`;
+  setTimeout(()=>{ const el=g('pbar'); if(el) el.style.width=Math.min(p,100)+'%'; }, 600);
+}
+
+function buildLog(qd, pd) {
+  const log = g('act-log');
+  const items = [];
+  if (qd) items.push({ icon:'📝', dot:'dot-q', title:'Theory Quiz Submitted', time:qd.timestamp||'—', pct:pct(qd) });
+  if (pd) items.push({ icon:'💻', dot:'dot-p', title:'Practical Assessment Submitted', time:pd.timestamp||'—', pct:pct(pd) });
+  if (!items.length) { log.innerHTML='<div class="act-empty">No submissions yet. Complete the quiz or practical first.</div>'; return; }
+  log.innerHTML = items.map(it => {
+    const cls = it.pct>=75?'ap-hi':it.pct>=50?'ap-mid':'ap-lo';
+    return `<div class="act-row">
+      <div class="act-dot ${it.dot}">${it.icon}</div>
+      <div class="act-body"><div class="act-t">${it.title}</div><div class="act-d">📅 ${it.time}</div></div>
+      <div class="act-pct ${cls}">${it.pct}%</div>
+    </div>`;
+  }).join('');
+}
+</script>
+</body>
+</html>
